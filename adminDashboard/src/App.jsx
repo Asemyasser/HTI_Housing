@@ -15,7 +15,7 @@ function App() {
   return (
     <>
       <ToastContainer autoClose={2000} />
-      <Router>
+      <Router basename="/Graduation_Project">
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
