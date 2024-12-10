@@ -1,0 +1,135 @@
+.sideNav {
+  width: 270px;
+  background-color: #1a2a4d;
+  color: #fff;
+  display: block;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1030;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 40px 0 0 40px;
+  -webkit-border-radius: 40px 0 0 40px;
+  -moz-border-radius: 40px 0 0 40px;
+  -ms-border-radius: 40px 0 0 40px;
+  -o-border-radius: 40px 0 0 40px;
+  transition: width 0.3s ease;
+  -webkit-transition: width 0.3s ease;
+  -moz-transition: width 0.3s ease;
+  -ms-transition: width 0.3s ease;
+  -o-transition: width 0.3s ease;
+}
+
+.sideNav.collapsed {
+  width: 85px;
+}
+
+.header {
+  box-shadow: 0px 4px 8px 0px rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+}
+
+.sideNav:not(.collapsed) .logo {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.collapsed .logo {
+  transform: scale(0.7);
+  opacity: 0.8;
+}
+
+.collapsed .logo:hover {
+  transform: scale(0.8);
+  opacity: 1;
+}
+
+.title {
+  font-family: "Itim", cursive;
+  margin: 0;
+  padding: 0;
+}
+
+.textContainer {
+  overflow: hidden;
+  white-space: nowrap;
+  /* Prevent text wrapping */
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.sideNav:not(.collapsed) .textContainer {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 15px 20px;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.3s ease, opacity 0.3s ease;
+  border-radius: 20px 30px 30px 0;
+}
+
+.navLink:hover,
+.navLink.activeLink {
+  background-color: #fff;
+  color: #1b3b69;
+}
+
+
+.navLink span {
+  margin-right: 16px;
+}
+
+.navLink svg {
+  width: 25px;
+  height: 25px;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+}
+
+.navLink:hover svg {
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
+}
+
+.footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.copyright {
+  font-size: 0.85rem;
+  color: #ccc;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.copyright.collapsed {
+  opacity: 0;
+}
+
+.copyright span {
+  font-weight: 700;
+  color: #fff;
+}

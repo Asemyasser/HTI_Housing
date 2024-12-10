@@ -1,0 +1,115 @@
+.requests-status {
+  list-style: none;
+  padding: 0 32px;
+  direction: rtl;
+}
+
+.requests-status a {
+  position: relative;
+  text-decoration: none;
+  color: #003668;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  padding: 14px;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+}
+
+.requests-status a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  padding: 2px;
+  background: linear-gradient(90deg, #003668 0%, #56A6F0 101.79%);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+.requests-status a:hover::before,
+.requests-status a.active::before {
+  background: linear-gradient(90deg, #003668 0%, #003668 101.79%);
+}
+
+.requests-status a:hover,
+.requests-status a.active {
+  color: #fff;
+  background-color: #003668;
+}
+
+.requests-status a h3 {
+  font-weight: 600;
+  margin: 0;
+}
+
+.parent {
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  overflow: hidden;
+}
+
+.parent th {
+  font-weight: 700;
+  vertical-align: middle;
+  padding: 24px;
+  padding-top: 32px;
+}
+
+.parent tr:last-of-type td {
+  padding-bottom: 48px;
+}
+
+
+.parent td {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  height: 14px !important;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .requests-status {
+    row-gap: 1rem;
+  }
+
+  .requests-status li h3 {
+    font-size: 1.2rem;
+    /* Adjust heading size for smaller screens */
+  }
+
+  .requests-status li a {
+    padding: 1rem;
+    /* Improve clickable area */
+    justify-content: start;
+  }
+}

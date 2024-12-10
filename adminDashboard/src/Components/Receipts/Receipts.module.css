@@ -1,0 +1,48 @@
+.parent {
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  overflow: hidden;
+
+}
+
+.parent th {
+  font-weight: 700;
+  vertical-align: middle;
+  padding: 24px;
+  padding-top: 32px;
+}
+
+
+.parent td {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  height: 14px !important;
+  vertical-align: middle;
+}
+
+.parent tr:last-of-type td {
+  padding-bottom: 48px;
+}
+
+.receiptBtn {
+  background-color: #6CF156;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: #0C0C0C;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
+  -webkit-transition: background-color 0.3s ease;
+  -moz-transition: background-color 0.3s ease;
+  -ms-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+}
+
+.receiptBtn:hover {
+  background-color: #5CC648;
+}

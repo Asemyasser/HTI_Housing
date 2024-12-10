@@ -1,0 +1,27 @@
+.pendingBtn {
+  background-color: #6CF156;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: #0C0C0C;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
+  -webkit-transition: background-color 0.3s ease;
+  -moz-transition: background-color 0.3s ease;
+  -ms-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+}
+
+.pendingBtn:hover {
+  background-color: #5CC648;
+}
+
+.pendingBtn:first-child {
+  background-color: #F15656;
+}
+
+.pendingBtn:first-child:hover {
+  background-color: #D94A4A;
+  ;
+}

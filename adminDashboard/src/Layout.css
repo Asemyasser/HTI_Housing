@@ -1,0 +1,15 @@
+  .section {
+    margin-top: 70px;
+    width: calc(100% - 270px);
+    color: #003668;
+    transition: width 0.3s ease;
+    padding: 48px 4px 0;
+    -webkit-transition: width 0.3s ease;
+    -moz-transition: width 0.3s ease;
+    -ms-transition: width 0.3s ease;
+    -o-transition: width 0.3s ease;
+  }
+
+  .section.collapsed {
+    width: calc(100% - 85px);
+  }

@@ -1,0 +1,87 @@
+.receiptCard {
+  background-color: #fff;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+
+.receiptCard strong {
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.receiptCard img {
+  max-height: 400px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+
+.actionBtn {
+  font-weight: bold;
+}
+
+.btn-danger {
+  background-color: #F15656;
+  border: none;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #D94A4A;
+}
+
+.btn-success {
+  background-color: #6CF156;
+  border: none;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #5CC648;
+}
+
+@media (max-width: 576px) {
+  .actionBtn {
+    font-size: 16px !important;
+  }
+}
+
+.imageModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  /* Transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.imageModalContent {
+  position: relative;
+  max-width: 60%;
+  max-height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageModalContent img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
