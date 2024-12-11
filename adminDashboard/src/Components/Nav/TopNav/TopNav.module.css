@@ -25,7 +25,16 @@
   -o-transition: width 0.3s ease;
   color: #003668;
   box-shadow: 0px 4px 4px -2px #00000040;
-  transition: width 0.3s ease;
+}
+
+.topNav.collapsed {
+  width: calc(100% - 85px);
+}
+
+@media (max-width: 610px) {
+  .topNav {
+    width: 100% !important;
+  }
 }
 
 .notifications {
@@ -77,12 +86,7 @@
   }
 }
 
-.topNav.collapsed {
-  width: calc(100% - 85px);
 
-
-  /* Adjust width considering the expanded SideNav */
-}
 
 .title {
   font-size: 30px;

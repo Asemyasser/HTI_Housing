@@ -23,11 +23,11 @@ function TopNav({ collapsed, setCollapsed, title }) {
       <div className={`${styles.topNav} ${collapsed ? styles.collapsed : ""} `}>
         <div className="container-fluid">
           <div className="row align-items-center ">
-            <div className="col-sm-7 col-12">
-              <div className="d-flex flex-column flex-sm-row align-items-center justify-content-center justify-content-sm-start gap-md-5 gap-3">
+            <div className="col-9">
+              <div className="d-flex align-items-center gap-3 ">
                 <button
                   onClick={toggleSidebar}
-                  className={`${styles.toggleButton} order-1 order-sm-0`}
+                  className={`${styles.toggleButton}`}
                   aria-expanded={!collapsed}
                   aria-label="Toggle navigation"
                 >
@@ -37,9 +37,9 @@ function TopNav({ collapsed, setCollapsed, title }) {
               </div>
             </div>
 
-            <div className="col-sm-5 col-12">
+            <div className="col-3 ">
               <div
-                className={`${styles.icons} d-flex gap-5 align-items-center  justify-content-between justify-content-sm-end`}
+                className={`${styles.icons} d-flex gap-3 align-items-center justify-content-end`}
               >
                 <FontAwesomeIcon icon={faMagnifyingGlass} size="lg" />
                 <FontAwesomeIcon
