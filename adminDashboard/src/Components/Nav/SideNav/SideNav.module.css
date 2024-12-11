@@ -27,7 +27,7 @@
 @media (max-width: 610px) {
   .sideNav {
     top: 100px;
-    width: 80%;
+    width: 60%;
     background-color: #1a2a4df0;
     height: 85% !important;
     opacity: 0;
@@ -55,6 +55,12 @@
 
   .sideNav.collapsed {
     display: none;
+  }
+}
+
+@media (max-width: 470px) {
+  .sideNav {
+    width: 80%;
   }
 }
 

@@ -21,7 +21,7 @@
 
 // export default Layout;
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navs from "./Components/Nav/Navs";
 import "./Layout.css";
