@@ -27,7 +27,7 @@ import Navs from "./Components/Nav/Navs";
 import "./Layout.css";
 
 function Layout() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   // Use `useLocation` to get the current route
   const location = useLocation();

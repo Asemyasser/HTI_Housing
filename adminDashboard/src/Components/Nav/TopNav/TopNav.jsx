@@ -37,7 +37,7 @@ function TopNav({ collapsed, setCollapsed, title }) {
               </div>
             </div>
 
-            <div className="col-3 ">
+            <div className="col-3 ps-0">
               <div
                 className={`${styles.icons} d-flex gap-3 align-items-center justify-content-end`}
               >
