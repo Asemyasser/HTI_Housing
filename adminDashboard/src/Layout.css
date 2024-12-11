@@ -13,3 +13,10 @@
   .section.collapsed {
     width: calc(100% - 85px);
   }
+
+  @media (max-width: 610px) {
+    .section {
+      width: 100% !important;
+    }
+
+  }

@@ -7,7 +7,11 @@ const Navs = ({ collapsed, setCollapsed }) => {
   const [title, setTitle] = useState("الواجهة الرئيسية");
   return (
     <div className={styles.navs}>
-      <SideNav setTitle={setTitle} collapsed={collapsed} />
+      <SideNav
+        setTitle={setTitle}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
       <TopNav title={title} collapsed={collapsed} setCollapsed={setCollapsed} />
     </div>
   );

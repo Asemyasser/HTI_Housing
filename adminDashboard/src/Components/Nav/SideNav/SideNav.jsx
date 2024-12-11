@@ -13,16 +13,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 
-const SideNav = ({ collapsed, setTitle }) => {
+const SideNav = ({ collapsed, setTitle, setCollapsed }) => {
   const [activeLink, setActiveLink] = useState("home");
-  const handleLinkClick = (linkName) => {
+
+  const handleLinkClick = (linkName, title) => {
     setActiveLink(linkName);
+    setTitle(title);
+    setCollapsed((prev) => !prev);
   };
 
   return (
     <div
       className={`${styles.sideNav} ${
-        collapsed ? styles.collapsed : ""
+        collapsed ? styles.collapsed : styles.open
       } d-flex flex-column vh-100`}
     >
       <div className={`${styles.header} p-3 `}>
@@ -39,8 +42,7 @@ const SideNav = ({ collapsed, setTitle }) => {
         <li className="nav-item w-100">
           <NavLink
             onClick={() => {
-              handleLinkClick("home");
-              setTitle("الواجهة الرئيسية");
+              handleLinkClick("home", "الواجهة الرئيسية");
             }}
             to="/"
             className={`${styles.navLink}  ${
@@ -59,8 +61,7 @@ const SideNav = ({ collapsed, setTitle }) => {
         <li className="nav-item w-100">
           <NavLink
             onClick={() => {
-              handleLinkClick("requests");
-              setTitle("طلبات الإقامة");
+              handleLinkClick("requests", "طلبات الإقامة");
             }}
             to="/requests"
             className={`${styles.navLink}  ${
@@ -77,8 +78,7 @@ const SideNav = ({ collapsed, setTitle }) => {
         <li className="nav-item w-100">
           <NavLink
             onClick={() => {
-              handleLinkClick("receipts");
-              setTitle("إيصالات الدفع");
+              handleLinkClick("receipts", "إيصالات الدفع");
             }}
             to="/receipts"
             className={`${styles.navLink}  ${
@@ -95,8 +95,7 @@ const SideNav = ({ collapsed, setTitle }) => {
         <li className="nav-item w-100">
           <NavLink
             onClick={() => {
-              handleLinkClick("settings");
-              setTitle("الإعدادات");
+              handleLinkClick("settings", "الإعدادات");
             }}
             to="/settings"
             className={`${styles.navLink}  ${
