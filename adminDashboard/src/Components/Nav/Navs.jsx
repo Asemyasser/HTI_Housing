@@ -3,7 +3,7 @@ import SideNav from "./SideNav/SideNav";
 import TopNav from "./TopNav/TopNav";
 import styles from "./Navs.module.css";
 
-const Navs = ({ collapsed, setCollapsed }) => {
+const Navs = ({ collapsed, setCollapsed, setIsAuthenticated }) => {
   const [title, setTitle] = useState("الواجهة الرئيسية");
   return (
     <div className={styles.navs}>
@@ -11,6 +11,7 @@ const Navs = ({ collapsed, setCollapsed }) => {
         setTitle={setTitle}
         collapsed={collapsed}
         setCollapsed={setCollapsed}
+        setIsAuthenticated={setIsAuthenticated}
       />
       <TopNav title={title} collapsed={collapsed} setCollapsed={setCollapsed} />
     </div>

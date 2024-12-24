@@ -21,12 +21,12 @@
 
 // export default Layout;
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navs from "./Components/Nav/Navs";
 import "./Layout.css";
 
-function Layout() {
+function Layout({ setIsAuthenticated }) {
   const [collapsed, setCollapsed] = useState(true);
 
   // Use `useLocation` to get the current route
@@ -38,27 +38,15 @@ function Layout() {
   // Check if the current route is excluded
   const isExcludedRoute = excludedRoutes.includes(location.pathname);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (sideNavRef.current && !sideNavRef.current.contains(event.target)) {
-        setCollapsed(true); // Close sidebar
-      }
-    };
-
-    // Add event listener to the document
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up the event listener when component unmounts
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setCollapsed]);
-
   return (
     <>
       {/* Render `Navs` only if the route is not excluded */}
       {!isExcludedRoute && (
-        <Navs collapsed={collapsed} setCollapsed={setCollapsed} />
+        <Navs
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          setIsAuthenticated={setIsAuthenticated}
+        />
       )}
 
       {/* Conditionally apply `section` class */}
