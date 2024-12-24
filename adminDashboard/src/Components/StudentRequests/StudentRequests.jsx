@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./StudentRequests.module.css";
-import { Link } from "react-router-dom";
 import {
   faFileCircleCheck,
   faFileCircleExclamation,
@@ -10,8 +9,43 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PendingRequests from "./PendingRequests/PendingRequests";
 import AcceptedRequests from "./AcceptedRequests/AcceptedRequests";
 import RejectedRequests from "./RejectedRequests/RejectedRequests";
-function StudentRequests({ collapsed }) {
+function StudentRequests() {
   const [active, setActive] = useState("pending");
+
+  const [students, setStudents] = useState([]); // State to store fetched data
+  const [loading, setLoading] = useState(true); // State to handle loading
+  const [error, setError] = useState(null); // State to handle errors
+
+  // Fetch students from the API
+  useEffect(() => {
+    const token = localStorage.getItem("authToken"); // Retrieve token from storage
+
+    const fetchStudents = async () => {
+      try {
+        const response = await fetch("/api/user/students", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: `${token}`, // Ensure token is passed as Bearer
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setStudents(data.users); // Update state with the fetched data
+        console.log(data.users);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message); // Handle errors
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, []);
 
   return (
     <div className={`${styles.section}  `}>
@@ -70,7 +104,13 @@ function StudentRequests({ collapsed }) {
               <table
                 className={`table  ${styles.parent} table-borderless text-center`}
               >
-                {active === "pending" && <PendingRequests />}
+                {active === "pending" && (
+                  <PendingRequests
+                    students={students}
+                    loading={loading}
+                    error={error}
+                  />
+                )}
                 {active === "accepted" && <AcceptedRequests />}
                 {active === "rejected" && <RejectedRequests />}
               </table>

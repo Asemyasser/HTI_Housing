@@ -1,58 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./PendingRequests.module.css";
-function PendingRequests() {
-  const data = [
-    {
-      id: 42202021,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202022,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "إدارة أعمال",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    // Add more rows as needed
-  ];
+function PendingRequests({ students, loading, error }) {
+  if (loading) return <p>...جاري تحميل البيانات</p>; // Show loading state
+  if (error) return <p>Error: {error}</p>; // Show error state
 
   return (
     <>
@@ -66,8 +16,8 @@ function PendingRequests() {
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
-          <tr key={index}>
+        {students.map((student) => (
+          <tr key={student._id}>
             <td>
               <button
                 className={`btn mx-1 rounded-pill px-4 ${styles.pendingBtn}`}
@@ -80,10 +30,10 @@ function PendingRequests() {
                 قبول
               </button>
             </td>
-            <td>{row.email}</td>
-            <td>{row.name}</td>
-            <td>{row.id}</td>
-            <td>{row.dept}</td>
+            <td>{student.email}</td>
+            <td>{student.name}</td>
+            <td>{student.ID}</td>
+            <td>{student.department}</td>
           </tr>
         ))}
       </tbody>

@@ -13,13 +13,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 
-const SideNav = ({ collapsed, setTitle, setCollapsed }) => {
+const SideNav = ({ collapsed, setTitle, setIsAuthenticated }) => {
   const [activeLink, setActiveLink] = useState("home");
 
   const handleLinkClick = (linkName, title) => {
     setActiveLink(linkName);
     setTitle(title);
-    setCollapsed((prev) => !prev);
   };
 
   return (
@@ -69,7 +68,7 @@ const SideNav = ({ collapsed, setTitle, setCollapsed }) => {
             } `}
           >
             {!collapsed && (
-              <span className={`${styles.textContainer} `}>طلبت الإقامة</span>
+              <span className={`${styles.textContainer} `}>طلبات الإقامة</span>
             )}
             <FontAwesomeIcon icon={faUsers} />
           </NavLink>
@@ -112,7 +111,15 @@ const SideNav = ({ collapsed, setTitle, setCollapsed }) => {
 
       <div className={`${styles.footer} mt-auto w-100 text-end  fs-5 mb-4`}>
         <NavLink
-          onClick={() => handleLinkClick("logout")}
+          onClick={() => {
+            // Remove the token and role from localStorage
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userRole");
+            // Set authentication state to false
+            setIsAuthenticated(!!localStorage.getItem("authToken"));
+            // Update active link and collapse the side navigation if needed
+            handleLinkClick("logout");
+          }}
           to="/login"
           className={`${styles.navLink} ${
             activeLink === "logout" ? styles.activeLink : ""
