@@ -17,7 +17,7 @@ const Register = () => {
 
   const { formData, handleChange, handleSubmit, loading, error } = useForm(
     { name: "", email: "", password: "", confirmPassword: "" },
-    `/api/auth/dashboard/signup`,
+    `${import.meta.env.VITE_API_BASE_URL}/auth/dashboard/signup`,
     (response) => {
       if (response.success) {
         alert(response.message);
