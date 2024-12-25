@@ -6,19 +6,20 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../assets/imgs/loginLogo.png";
 import htiBuilding from "../../assets/imgs/hti-building.png";
 
-const Login = ({ setIsAuthenticated }) => {
+const Login = () => {
   const [formErrors, setFormErrors] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const { formData, handleChange, handleSubmit, loading, error } = useForm(
     { email: "", password: "" },
-    `/api/auth/dashboard/login`,
+    `${import.meta.env.VITE_API_BASE_URL}/auth/dashboard/login`,
+    // `${"https://htihousing-eel315fa.b4a.run"}/auth/dashboard/login`,
+    // `${"/api"}/auth/dashboard/login`,
     (response) => {
       if (response.success) {
         // Save token and role to localStorage
         localStorage.setItem("authToken", response.data.token);
         localStorage.setItem("userRole", response.data.role);
-        // setIsAuthenticated(!!localStorage.getItem("authToken")); // Update authentication state
         alert(response.message); // Notify user
         navigate("/"); // Redirect to the dashboard
       }
