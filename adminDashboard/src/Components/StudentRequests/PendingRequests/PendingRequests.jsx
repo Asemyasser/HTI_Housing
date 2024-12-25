@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./PendingRequests.module.css";
-function PendingRequests({ students, loading, error }) {
+import { useOutletContext } from "react-router-dom";
+
+function PendingRequests() {
+  const [filteredData, setFilteredData, loading, error] = useOutletContext();
   if (loading) return <p>...جاري تحميل البيانات</p>; // Show loading state
-  if (error) return <p>Error: {error}</p>; // Show error state
+  // if (error) return <p>Error: {error}</p>; // Show error state
 
   return (
     <>
@@ -16,7 +19,7 @@ function PendingRequests({ students, loading, error }) {
         </tr>
       </thead>
       <tbody>
-        {students.map((student) => (
+        {filteredData.map((student) => (
           <tr key={student._id}>
             <td>
               <button

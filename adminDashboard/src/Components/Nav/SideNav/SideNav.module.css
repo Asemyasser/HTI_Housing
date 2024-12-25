@@ -24,7 +24,7 @@
   width: 85px;
 }
 
-@media (max-width: 610px) {
+@media (max-width: 710px) {
   .sideNav {
     top: 100px;
     width: 60%;

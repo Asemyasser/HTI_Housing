@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./Receipts.module.css";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
+import { use } from "react";
 
 export const receiptData = [
   {
@@ -12,23 +13,29 @@ export const receiptData = [
   {
     id: 42202022,
     email: "42202021@hti.edu.eg",
-    name: "إبراهيم محمد",
+    name: "عاصم ياسر",
     dept: "إدارة أعمال",
   },
   {
     id: 42202023,
     email: "42202021@hti.edu.eg",
-    name: "إبراهيم محمد",
+    name: "يوسف تامر",
     dept: "هندسة",
   },
 ];
 
 function Receipts() {
+  const { filteredData, setFilteredData, setData, data } = useOutletContext();
   const navigate = useNavigate();
 
   const handleReceiptClick = (id) => {
-    navigate(`/receipt-details/${id}`); // Navigate to the ReceiptDetails page
+    navigate(`/receipts/${id}`); // Navigate to the ReceiptDetails page
   };
+
+  useEffect(() => {
+    setData(receiptData);
+    setFilteredData(receiptData);
+  }, []);
 
   return (
     <div className="container">
@@ -46,7 +53,7 @@ function Receipts() {
             </tr>
           </thead>
           <tbody>
-            {receiptData.map((row, index) => (
+            {filteredData.map((row, index) => (
               <tr key={index}>
                 <td>
                   <button

@@ -9,6 +9,9 @@ import {
 import { Suspense, lazy, useState, useEffect } from "react";
 import Layout from "./Layout";
 import { ToastContainer } from "react-toastify";
+import PendingRequests from "./Components/StudentRequests/PendingRequests/PendingRequests";
+import AcceptedRequests from "./Components/StudentRequests/AcceptedRequests/AcceptedRequests";
+import RejectedRequests from "./Components/StudentRequests/RejectedRequests/RejectedRequests";
 
 // Lazy loading components
 const Home = lazy(() => import("./Components/Home/Home"));
@@ -44,15 +47,28 @@ function App() {
             <Route path="/" element={<PrivateRoute element={<Layout />} />}>
               <Route index element={<PrivateRoute element={<Home />} />} />
               <Route
-                path="/requests"
+                path="/requests/"
                 element={<PrivateRoute element={<StudentRequests />} />}
-              />
+              >
+                <Route
+                  index
+                  element={<PrivateRoute element={<PendingRequests />} />}
+                />
+                <Route
+                  path="accepted"
+                  element={<PrivateRoute element={<AcceptedRequests />} />}
+                />
+                <Route
+                  path="rejected"
+                  element={<PrivateRoute element={<RejectedRequests />} />}
+                />
+              </Route>
               <Route
                 path="/receipts"
                 element={<PrivateRoute element={<Receipts />} />}
               />
               <Route
-                path="/receipt-details/:id"
+                path="/receipts/:id"
                 element={<PrivateRoute element={<ReceiptDetails />} />}
               />
               <Route

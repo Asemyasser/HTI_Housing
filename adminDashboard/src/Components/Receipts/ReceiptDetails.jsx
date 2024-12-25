@@ -21,6 +21,7 @@ function ReceiptDetails() {
   if (!receipt) {
     // Redirect back to Receipts if no receipt is found
     navigate("/receipts");
+    toast.error("لا يوجد إيصال");
     return null;
   }
 
