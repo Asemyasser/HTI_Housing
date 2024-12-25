@@ -6,46 +6,99 @@ import {
   faFileCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PendingRequests from "./PendingRequests/PendingRequests";
-import AcceptedRequests from "./AcceptedRequests/AcceptedRequests";
-import RejectedRequests from "./RejectedRequests/RejectedRequests";
+import axios from "axios";
+import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
+export const DATA = [
+  {
+    _id: 1,
+    email: "42202021@hti.edu.eg",
+    name: "إبراهيم محمد",
+    dept: "علوم حاسب",
+    actions: { accept: true, reject: true },
+  },
+  {
+    _id: 2,
+    email: "42202021@hti.edu.eg",
+    name: "عاصم ",
+    dept: "إدارة أعمال",
+    actions: { accept: true, reject: true },
+  },
+  {
+    _id: 3,
+    email: "42202021@hti.edu.eg",
+    name: "محمد",
+    dept: "علوم حاسب",
+    actions: { accept: true, reject: true },
+  },
+  {
+    _id: 4,
+    email: "42202021@hti.edu.eg",
+    name: "سعد ",
+    dept: "علوم حاسب",
+    actions: { accept: true, reject: true },
+  },
+  {
+    _id: 5,
+    email: "42202021@hti.edu.eg",
+    name: "إبراهيم ",
+    dept: "علوم حاسب",
+    actions: { accept: true, reject: true },
+  },
+  {
+    _id: 6,
+    email: "42202021@hti.edu.eg",
+    name: "فتحي ",
+    dept: "علوم حاسب",
+    actions: { accept: true, reject: true },
+  },
+  {
+    _id: 7,
+    email: "42202021@hti.edu.eg",
+    name: "إبراهيم محمد",
+    dept: "علوم حاسب",
+    actions: { accept: true, reject: true },
+  },
+  // Add more rows as needed
+];
 function StudentRequests() {
-  const [active, setActive] = useState("pending");
-
+  const { filteredData, setFilteredData, data, setData } = useOutletContext();
+  const location = useLocation();
+  const [active, setActive] = useState(""); // State to handle active tab
   const [students, setStudents] = useState([]); // State to store fetched data
   const [loading, setLoading] = useState(true); // State to handle loading
   const [error, setError] = useState(null); // State to handle errors
 
   // Fetch students from the API
   useEffect(() => {
-    const token = localStorage.getItem("authToken"); // Retrieve token from storage
+    setFilteredData(DATA);
+    setData(DATA);
 
+    // const token = localStorage.getItem("authToken"); // Retrieve token from storage
     const fetchStudents = async () => {
       try {
-        const response = await fetch("/api/user/students", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: `${token}`, // Ensure token is passed as Bearer
-          },
-        });
+        const response = await axios.get("/api/user/students"); // Fetch data from the API
 
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        setStudents(data.users); // Update state with the fetched data
-        console.log(data.users);
-        setLoading(false);
+        setStudents(response.data.users); // Update state with the fetched data
+        // setFilteredData(response.data.users);
+        console.log(response.data.users);
       } catch (err) {
-        setError(err.message); // Handle errors
+        setError(err.response?.data?.message || err.message); // Handle errors
+        console.error(err);
+        console.log(students);
+      } finally {
         setLoading(false);
       }
     };
 
+    const pathToLinkMap = {
+      "/requests": "pending",
+      "/requests/accepted": "accepted",
+      "/requests/rejected": "rejected",
+    };
+    setActive(pathToLinkMap[location.pathname] || "");
+
     fetchStudents();
-  }, []);
+  }, [location.pathname]);
 
   return (
     <div className={`${styles.section}  `}>
@@ -55,8 +108,8 @@ function StudentRequests() {
         >
           <div className="col-md-4 col-12 ">
             <li>
-              <a
-                href="#"
+              <Link
+                to="/requests"
                 onClick={() => {
                   setActive("pending");
                 }}
@@ -64,14 +117,14 @@ function StudentRequests() {
               >
                 <FontAwesomeIcon icon={faFileCircleExclamation} size={"lg"} />
                 <h3 className="h4">طلبات قيد الانتظار</h3>
-              </a>
+              </Link>
             </li>
           </div>
 
           <div className="col-md-4 col-12 ">
             <li>
-              <a
-                href="#"
+              <Link
+                to="/requests/accepted"
                 onClick={() => {
                   setActive("accepted");
                 }}
@@ -79,14 +132,14 @@ function StudentRequests() {
               >
                 <FontAwesomeIcon icon={faFileCircleCheck} size={"lg"} />
                 <h3 className="h4">طلبات موافق عليها</h3>
-              </a>
+              </Link>
             </li>
           </div>
 
           <div className="col-md-4 col-12 ">
             <li>
-              <a
-                href="#"
+              <Link
+                to="/requests/rejected"
                 onClick={() => {
                   setActive("rejected");
                 }}
@@ -94,7 +147,7 @@ function StudentRequests() {
               >
                 <FontAwesomeIcon icon={faFileCircleXmark} size={"lg"} />
                 <h3 className="h4">طلبات مرفوضة</h3>
-              </a>
+              </Link>
             </li>
           </div>
         </ul>
@@ -104,7 +157,7 @@ function StudentRequests() {
               <table
                 className={`table  ${styles.parent} table-borderless text-center`}
               >
-                {active === "pending" && (
+                {/* {active === "pending" && (
                   <PendingRequests
                     students={students}
                     loading={loading}
@@ -112,7 +165,11 @@ function StudentRequests() {
                   />
                 )}
                 {active === "accepted" && <AcceptedRequests />}
-                {active === "rejected" && <RejectedRequests />}
+                {active === "rejected" && <RejectedRequests />} */}
+                <Outlet
+                  // DATA={DATA}
+                  context={[filteredData, setFilteredData, loading, error]}
+                />
               </table>
             </div>
           </div>

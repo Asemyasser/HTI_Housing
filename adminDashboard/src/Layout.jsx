@@ -1,33 +1,12 @@
-// import React, { useState } from "react";
-// import "./Layout.css";
-// import Navs from "./Components/Nav/Navs";
-// import { Outlet } from "react-router-dom";
-// import Login from "./Components/Login/login";
-// import Register from "./Components/Register/Register";
-
-// function Layout() {
-//   const [collapsed, setCollapsed] = useState(false);
-//   return (
-//     <>
-//       <Navs collapsed={collapsed} setCollapsed={setCollapsed} />
-//       <div className={`section ${collapsed ? "collapsed" : ""}`}>
-//         <Outlet />
-//       </div>
-//       {/* <Login />
-//       <Register /> */}
-//     </>
-//   );
-// }
-
-// export default Layout;
-
 import React, { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navs from "./Components/Nav/Navs";
 import "./Layout.css";
-
 function Layout({ setIsAuthenticated }) {
   const [collapsed, setCollapsed] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState([]); // Filtered student data
+  const [data, setData] = useState([]);
 
   // Use `useLocation` to get the current route
   const location = useLocation();
@@ -38,6 +17,24 @@ function Layout({ setIsAuthenticated }) {
   // Check if the current route is excluded
   const isExcludedRoute = excludedRoutes.includes(location.pathname);
 
+  const handleSearch = (e) => {
+    const query = e.target.value; // Get the current value from the input field
+    setSearchQuery(query); // Update the search query state (still necessary for state tracking)
+
+    if (query) {
+      const filtered = data.filter((item) => {
+        // Filter based on the current query (e.target.value)
+        return Object.values(item)
+          .join("")
+          .toLowerCase()
+          .includes(query.toLowerCase());
+      });
+      setFilteredData(filtered); // Update the filtered data
+    } else {
+      setFilteredData(data); // Reset to original data if input is empty
+    }
+  };
+
   return (
     <>
       {/* Render `Navs` only if the route is not excluded */}
@@ -46,6 +43,9 @@ function Layout({ setIsAuthenticated }) {
           collapsed={collapsed}
           setCollapsed={setCollapsed}
           setIsAuthenticated={setIsAuthenticated}
+          onSearch={handleSearch}
+          setSearchQuery={setSearchQuery}
+          searchQuery={searchQuery}
         />
       )}
 
@@ -56,7 +56,7 @@ function Layout({ setIsAuthenticated }) {
         }
       >
         {/* Render the nested routes */}
-        <Outlet />
+        <Outlet context={{ filteredData, setFilteredData, setData, data }} />
       </div>
     </>
   );

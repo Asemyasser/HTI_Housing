@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./SideNav.module.css";
 import logo from "../../../assets/imgs/Logo.png";
 import "@fontsource/inter";
@@ -11,10 +11,30 @@ import {
   faUsers,
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const SideNav = ({ collapsed, setTitle, setIsAuthenticated }) => {
-  const [activeLink, setActiveLink] = useState("home");
+  const location = useLocation();
+  const [activeLink, setActiveLink] = useState("");
+
+  useEffect(() => {
+    // Map base paths to activeLink values
+    const pathToLinkMap = {
+      "/": "home",
+      "/requests": "requests",
+      "/receipts": "receipts",
+      "/settings": "settings",
+    };
+
+    // Find the matching key from pathToLinkMap for the current pathname
+    const activeLinkKey = Object.keys(pathToLinkMap).find(
+      (path) =>
+        path === location.pathname ||
+        (path !== "/" && location.pathname.startsWith(path))
+    );
+
+    setActiveLink(pathToLinkMap[activeLinkKey] || "");
+  }, [location.pathname]);
 
   const handleLinkClick = (linkName, title) => {
     setActiveLink(linkName);

@@ -2,11 +2,19 @@ import { faBars, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./TopNav.module.css";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import notificationsBell from "../../../assets/imgs/notificationBell.png";
 
-function TopNav({ collapsed, setCollapsed, title }) {
+function TopNav({
+  collapsed,
+  setCollapsed,
+  title,
+  onSearch,
+  setSearchQuery,
+  searchQuery,
+}) {
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
 
   const toggleSidebar = () => {
     setCollapsed((prev) => !prev);
@@ -14,6 +22,10 @@ function TopNav({ collapsed, setCollapsed, title }) {
 
   const toggleNotifications = () => {
     setShowNotifications((prev) => !prev);
+  };
+
+  const toggleSearchBar = () => {
+    setShowSearchBar((prev) => !prev);
   };
 
   return (
@@ -41,7 +53,25 @@ function TopNav({ collapsed, setCollapsed, title }) {
               <div
                 className={`${styles.icons} d-flex gap-3 align-items-center justify-content-end`}
               >
-                <FontAwesomeIcon icon={faMagnifyingGlass} size="lg" />
+                <div className={styles.searchWrapper}>
+                  <FontAwesomeIcon
+                    icon={faMagnifyingGlass}
+                    size="lg"
+                    onClick={toggleSearchBar}
+                    className={`${styles.searchIcon} ${
+                      showSearchBar ? styles.active : ""
+                    }`}
+                  />
+                  {showSearchBar && (
+                    <input
+                      type="text"
+                      placeholder="ابحث هنا..."
+                      value={searchQuery}
+                      onChange={onSearch}
+                      className={`${styles.searchInput}`}
+                    />
+                  )}
+                </div>
                 <FontAwesomeIcon
                   icon={faBell}
                   size="lg"

@@ -14,9 +14,8 @@
     width: calc(100% - 85px);
   }
 
-  @media (max-width: 610px) {
+  @media (max-width: 710px) {
     .section {
       width: 100% !important;
     }
-
   }
