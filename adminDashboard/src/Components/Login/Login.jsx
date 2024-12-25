@@ -13,8 +13,6 @@ const Login = () => {
   const { formData, handleChange, handleSubmit, loading, error } = useForm(
     { email: "", password: "" },
     `${import.meta.env.VITE_API_BASE_URL}/auth/dashboard/login`,
-    // `${"https://htihousing-eel315fa.b4a.run"}/auth/dashboard/login`,
-    // `${"/api"}/auth/dashboard/login`,
     (response) => {
       if (response.success) {
         // Save token and role to localStorage
@@ -23,6 +21,7 @@ const Login = () => {
         alert(response.message); // Notify user
         navigate("/"); // Redirect to the dashboard
       }
+      console.log(import.meta.env.VITE_API_BASE_URL);
     }
   );
 
