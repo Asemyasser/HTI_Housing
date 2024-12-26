@@ -11,51 +11,43 @@ import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
 export const DATA = [
   {
     _id: 1,
-    email: "42202021@hti.edu.eg",
-    name: "إبراهيم محمد",
+    email: "42020218@hti.edu.eg",
+    name: "محمد فوزي",
     dept: "علوم حاسب",
+    ID: 42020218,
     actions: { accept: true, reject: true },
   },
   {
     _id: 2,
-    email: "42202021@hti.edu.eg",
-    name: "عاصم ",
+    email: "42021288@hti.edu.eg",
+    name: "عاصم ياسر ",
     dept: "إدارة أعمال",
+    ID: 42021288,
     actions: { accept: true, reject: true },
   },
   {
     _id: 3,
-    email: "42202021@hti.edu.eg",
-    name: "محمد",
+    email: "42022012@hti.edu.eg",
+    name: "أحمد مهدي",
     dept: "علوم حاسب",
+    ID: 42022012,
     actions: { accept: true, reject: true },
   },
   {
     _id: 4,
-    email: "42202021@hti.edu.eg",
-    name: "سعد ",
+    email: "42023340@hti.edu.eg",
+    name: "عبدالله أباظة",
     dept: "علوم حاسب",
+    ID: 42023340,
+
     actions: { accept: true, reject: true },
   },
   {
     _id: 5,
-    email: "42202021@hti.edu.eg",
-    name: "إبراهيم ",
-    dept: "علوم حاسب",
-    actions: { accept: true, reject: true },
-  },
-  {
-    _id: 6,
-    email: "42202021@hti.edu.eg",
-    name: "فتحي ",
-    dept: "علوم حاسب",
-    actions: { accept: true, reject: true },
-  },
-  {
-    _id: 7,
-    email: "42202021@hti.edu.eg",
-    name: "إبراهيم محمد",
-    dept: "علوم حاسب",
+    email: "42024120@hti.edu.eg",
+    name: "يوسف تامر",
+    dept: "هندسة",
+    ID: 42024120,
     actions: { accept: true, reject: true },
   },
   // Add more rows as needed
@@ -67,19 +59,19 @@ function StudentRequests() {
   const [students, setStudents] = useState([]); // State to store fetched data
   const [loading, setLoading] = useState(true); // State to handle loading
   const [error, setError] = useState(null); // State to handle errors
+  // const token = localStorage.getItem("authToken"); // Retrieve token from storage
 
   // Fetch students from the API
+  // setFilteredData(response.data.users);
   useEffect(() => {
     setFilteredData(DATA);
     setData(DATA);
 
-    // const token = localStorage.getItem("authToken"); // Retrieve token from storage
     const fetchStudents = async () => {
       try {
         const response = await axios.get("/api/user/students"); // Fetch data from the API
 
         setStudents(response.data.users); // Update state with the fetched data
-        // setFilteredData(response.data.users);
         console.log(response.data.users);
       } catch (err) {
         setError(err.response?.data?.message || err.message); // Handle errors
@@ -157,17 +149,7 @@ function StudentRequests() {
               <table
                 className={`table  ${styles.parent} table-borderless text-center`}
               >
-                {/* {active === "pending" && (
-                  <PendingRequests
-                    students={students}
-                    loading={loading}
-                    error={error}
-                  />
-                )}
-                {active === "accepted" && <AcceptedRequests />}
-                {active === "rejected" && <RejectedRequests />} */}
                 <Outlet
-                  // DATA={DATA}
                   context={[filteredData, setFilteredData, loading, error]}
                 />
               </table>
