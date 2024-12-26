@@ -11,11 +11,12 @@ import {
   faUsers,
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const SideNav = ({ collapsed, setTitle, setIsAuthenticated }) => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Map base paths to activeLink values
@@ -139,6 +140,7 @@ const SideNav = ({ collapsed, setTitle, setIsAuthenticated }) => {
             setIsAuthenticated(!!localStorage.getItem("authToken"));
             // Update active link and collapse the side navigation if needed
             handleLinkClick("logout");
+            navigate("/login");
           }}
           to="/login"
           className={`${styles.navLink} ${
