@@ -16,7 +16,6 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 const SideNav = ({ collapsed, setTitle, setIsAuthenticated }) => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Map base paths to activeLink values
@@ -140,9 +139,8 @@ const SideNav = ({ collapsed, setTitle, setIsAuthenticated }) => {
             setIsAuthenticated(!!localStorage.getItem("authToken"));
             // Update active link and collapse the side navigation if needed
             handleLinkClick("logout");
-            navigate("/login");
           }}
-          to="/login"
+          to="/"
           className={`${styles.navLink} ${
             activeLink === "logout" ? styles.activeLink : ""
           }  me-3 pt-3 mt-2 `}
