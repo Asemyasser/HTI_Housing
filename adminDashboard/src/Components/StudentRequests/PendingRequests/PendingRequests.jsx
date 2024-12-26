@@ -36,7 +36,7 @@ function PendingRequests() {
             <td>{student.email}</td>
             <td>{student.name}</td>
             <td>{student.ID}</td>
-            <td>{student.department}</td>
+            <td>{student.dept}</td>
           </tr>
         ))}
       </tbody>
