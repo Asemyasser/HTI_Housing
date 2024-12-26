@@ -57,7 +57,7 @@ const Home = () => {
                 path={"/requests"}
               />
               <Card
-                percentage={30}
+                percentage={20}
                 title="طلبات قيد الانتظار"
                 bgColor="linear-gradient(198.93deg, #461EE7 12.77%, #1EB6E7 94.68%)"
                 path={"/requests"}
@@ -65,13 +65,13 @@ const Home = () => {
             </div>
             <div className="row justify-content-end gap-4">
               <Card
-                percentage={96}
+                percentage={70}
                 title="الطلبات الموافق عليها"
                 bgColor="linear-gradient(204.11deg, #40D5A8 15.46%, #40BAD5 95.79%)"
                 path={"/requests/accepted"}
               />
               <Card
-                percentage={5}
+                percentage={10}
                 title="الطلبات المرفوضة"
                 bgColor="linear-gradient(221.17deg, #F33D3D 5.91%, #F56565 97.67%)"
                 path={"/requests/rejected"}

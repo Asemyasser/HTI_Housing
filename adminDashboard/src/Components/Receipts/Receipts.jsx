@@ -12,13 +12,13 @@ export const receiptData = [
   },
   {
     id: 42202022,
-    email: "42202021@hti.edu.eg",
+    email: "42202022@hti.edu.eg",
     name: "عاصم ياسر",
     dept: "إدارة أعمال",
   },
   {
     id: 42202023,
-    email: "42202021@hti.edu.eg",
+    email: "42202023@hti.edu.eg",
     name: "يوسف تامر",
     dept: "هندسة",
   },
