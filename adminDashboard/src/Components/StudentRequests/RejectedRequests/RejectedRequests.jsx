@@ -9,48 +9,7 @@ function RejectedRequests() {
       dept: "علوم حاسب",
       actions: { accept: true, reject: true },
     },
-    {
-      id: 42202022,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "إدارة أعمال",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
+
     // Add more rows as needed
   ];
 
