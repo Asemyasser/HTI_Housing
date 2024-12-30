@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import styles from "./Settings.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { toast } from "react-toastify"; // Import toast for notifications
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Settings = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +12,6 @@ const Settings = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
-  // const [apiStatus, setApiStatus] = useState("");
 
   // Handle input changes
   const handleChange = (e) => {
@@ -57,7 +56,7 @@ const Settings = () => {
       }
 
       const response = await axios.patch(
-        "/api/auth/dashboard/change-password",
+        `${import.meta.env.VITE_API_BASE_URL}/auth/dashboard/change-password`,
         {
           oldPassword: formData.oldPassword,
           newPassword: formData.newPassword,
@@ -155,18 +154,6 @@ const Settings = () => {
             </div>
           </div>
         </div>
-        {/* <div className="d-flex flex-column flex-md-row justify-content-center align-items-center mt-5 gap-4 row-gap-2">
-          <button
-            className={`btn btn-success fs-4 px-4 px-sm-5 rounded-pill ${styles.saveButton}`}
-          >
-            حفظ التغييرات
-          </button>
-          <button
-            className={`btn btn-danger fs-4 px-4 px-sm-5 rounded-pill ${styles.cancelButton}`}
-          >
-            تجاهل
-          </button>
-        </div> */}
       </div>
     </div>
   );

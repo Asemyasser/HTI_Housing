@@ -104,12 +104,10 @@
 
   .requests-status li h3 {
     font-size: 1.2rem;
-    /* Adjust heading size for smaller screens */
   }
 
   .requests-status li a {
     padding: 1rem;
-    /* Improve clickable area */
     justify-content: start;
   }
 }

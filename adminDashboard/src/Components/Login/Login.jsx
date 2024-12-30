@@ -21,7 +21,6 @@ const Login = () => {
         alert(response.message); // Notify user
         navigate("/"); // Redirect to the dashboard
       }
-      console.log(import.meta.env.VITE_API_BASE_URL);
     }
   );
 
