@@ -1,58 +1,41 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 function AcceptedRequests() {
-  const data = [
-    {
-      id: 42202021,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202022,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "إدارة أعمال",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    {
-      id: 42202023,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
-    // Add more rows as needed
-  ];
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [filteredData, setFilteredData, setData] = useOutletContext();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken"); // Retrieve token from storage
+    const fetchApprovedStudents = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/user/students/approved`,
+          {
+            headers: {
+              token: `${token}`,
+            },
+          }
+        ); // Fetch data from the API
+
+        setFilteredData(response.data.users);
+        setData(response.data.users);
+
+        console.log(response.data.users);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message); // Handle errors
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchApprovedStudents();
+  }, []);
+
+  if (loading) return <p>...جاري تحميل البيانات</p>; // Show loading state
+  if (error) return <p>Error: {error}</p>; // Show error state
 
   return (
     <>
@@ -66,12 +49,12 @@ function AcceptedRequests() {
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
-          <tr key={index}>
+        {filteredData.map((row, index) => (
+          <tr key={row._id}>
             <td>{row.email}</td>
             <td>{row.name}</td>
-            <td>{row.id}</td>
-            <td>{row.dept}</td>
+            <td>{row.ID}</td>
+            <td>{row.department}</td>
             <td>{index + 1}</td>
           </tr>
         ))}

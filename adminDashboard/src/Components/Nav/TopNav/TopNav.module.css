@@ -38,11 +38,13 @@
 }
 
 .notifications {
+  min-width: 350px;
+  max-width: 450px;
   position: absolute;
   left: 16px;
   top: 110%;
+  padding: 16px 20px;
   background-color: #fff;
-  width: 50%;
   height: 500px;
   box-shadow: 0px 4px 4px -2px #00000040;
   z-index: 1040;
@@ -53,9 +55,39 @@
   -o-border-radius: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
+  transition: opacity 0.3s ease-in-out;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out;
+  -ms-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.noNotifications {
+  position: absolute;
+  min-width: 350px;
+  max-width: 450px;
+
+  left: 16px;
+  top: 110%;
+  padding: 16px 20px;
+  background-color: #fff;
+  height: 500px;
+  box-shadow: 0px 4px 4px -2px #00000040;
+  z-index: 1040;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   transition: opacity 0.3s ease-in-out;
   -webkit-transition: opacity 0.3s ease-in-out;
   -moz-transition: opacity 0.3s ease-in-out;
@@ -63,13 +95,87 @@
   -o-transition: opacity 0.3s ease-in-out;
 }
 
-.notifications img {
-  width: 20%;
+.noNotifications img {
+  width: 50%;
 }
 
-.notifications p {
+.noNotifications p {
   font-weight: 700;
   color: #585858;
+}
+
+.notifications .notificationItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  transition: background-color 0.3s;
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -ms-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.notifications .notificationItem:hover {
+  background-color: #f5f5f5;
+}
+
+.notifications .notificationItem .iconRequest,
+.notifications .notificationItem .iconReceipt {
+  width: 25px;
+  height: 25px;
+  padding: 12px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  background-color: #58A0FE;
+  color: #fff;
+}
+
+.notifications .notificationItem .iconReceipt {
+  background-color: #BCA6FF;
+}
+
+.notifications .notificationItem p {
+  color: #003668;
+  padding: 0 4px;
+  width: 160px;
+}
+
+.deleteIcon {
+  width: 20px;
+  height: 20px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  background-color: #EDC7C7;
+  transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+}
+
+.deleteIcon:hover {
+  transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
@@ -167,21 +273,47 @@
   left: 100%;
   transform: translateY(-50%);
   width: 200px;
-  padding: 5px 10px;
+  padding: 12px 10px;
   font-size: 14px;
-  border: 1px solid #ddd;
+  border: 1px solid #003668;
   outline: none;
   margin-left: 16px;
-  border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  -ms-border-radius: 20px;
-  -o-border-radius: 20px;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
   transition: all 0.3s ease;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   -ms-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+
+.searchInput:focus {
+  width: 400px;
+}
+
+@media (max-width: 1024px) {
+  .searchInput {
+    width: 100px;
+  }
+
+  .searchInput:focus {
+    width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .searchInput {
+    top: 220%;
+    left: 0;
+    margin-left: 0;
+  }
 }
 
 .searchIcon {
@@ -211,10 +343,30 @@
   gap: 15px;
 }
 
-@media (max-width: 768px) {
-  .searchInput {
-    top: 200%;
-    left: 0;
-    margin-left: 0;
-  }
+.notificationWrapper {
+  position: relative;
+}
+
+.notificationDot {
+  position: absolute;
+  top: 13px;
+  /*Adjustpositionasneeded*/
+  right: 13px;
+  /*Adjustpositionasneeded*/
+  width: 8px;
+  /*Sizeofthereddot*/
+  height: 8px;
+  /*Sizeofthereddot*/
+  background-color: red;
+  border-radius: 50%;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+}
+
+
+.timestamp {
+  width: 100px;
 }

@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Card.module.css";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Card = ({ percentage, title, bgColor, path }) => {
-  const [currentPercentage, setCurrentPercentage] = useState(percentage);
+  const [currentPercentage, setCurrentPercentage] = useState(
+    typeof percentage === "string" ? 100 : 0
+  );
   const navigate = useNavigate();
   function cardClickHandler() {
     navigate(path);
   }
 
   useEffect(() => {
+    if (typeof percentage === "string") {
+      // Skip animation and set the white section to 100%
+      setCurrentPercentage(100);
+      return;
+    }
     // Animate the percentage from 0 to the desired value
     let progress = 0;
     const interval = setInterval(() => {
-      if (progress < percentage && typeof percentage === "number") {
+      if (progress < percentage) {
         progress++;
         setCurrentPercentage(progress);
       } else {
@@ -39,8 +46,10 @@ const Card = ({ percentage, title, bgColor, path }) => {
       >
         <div className={styles.innerCircle} style={{ background: bgColor }}>
           <span>
-            {currentPercentage}
-            {typeof percentage === "string" ? "" : "%"}
+            {typeof percentage === "string"
+              ? percentage
+              : `${currentPercentage}%`}{" "}
+            {/* Show percentage normally */}
           </span>
         </div>
       </span>

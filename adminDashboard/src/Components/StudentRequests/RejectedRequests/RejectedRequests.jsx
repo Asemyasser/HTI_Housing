@@ -1,17 +1,41 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 function RejectedRequests() {
-  const data = [
-    {
-      id: 42202021,
-      email: "42202021@hti.edu.eg",
-      name: "إبراهيم محمد",
-      dept: "علوم حاسب",
-      actions: { accept: true, reject: true },
-    },
+  const [filteredData, setFilteredData, setData] = useOutletContext();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    // Add more rows as needed
-  ];
+  useEffect(() => {
+    const token = localStorage.getItem("authToken"); // Retrieve token from storage
+    const fetchRejectedStudents = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/user/students/rejected`,
+          {
+            headers: {
+              token: `${token}`,
+            },
+          }
+        ); // Fetch data from the API
+
+        setFilteredData(response.data.users);
+        setData(response.data.users);
+
+        console.log(response.data.users);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message); // Handle errors
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRejectedStudents();
+  }, []);
+
+  if (loading) return <p>...جاري تحميل البيانات</p>; // Show loading state
+  if (error) return <p>Error: {error}</p>; // Show error state
 
   return (
     <>
@@ -25,12 +49,12 @@ function RejectedRequests() {
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
-          <tr key={index}>
+        {filteredData.map((row, index) => (
+          <tr key={row._id}>
             <td>{row.email}</td>
             <td>{row.name}</td>
-            <td>{row.id}</td>
-            <td>{row.dept}</td>
+            <td>{row.ID}</td>
+            <td>{row.department}</td>
             <td>{index + 1}</td>
           </tr>
         ))}
