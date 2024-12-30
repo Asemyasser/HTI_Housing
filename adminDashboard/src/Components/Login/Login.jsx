@@ -123,7 +123,10 @@ const Login = () => {
 
               {/* Create Account Link */}
               <p className={styles.createAccount}>
-                ليس لديك حساب؟ <NavLink to="/register">إنشاء حساب</NavLink>
+                ليس لديك حساب؟{" "}
+                <NavLink to="/register" onClick={() => navigate("/register")}>
+                  إنشاء حساب
+                </NavLink>
               </p>
             </form>
           </div>
