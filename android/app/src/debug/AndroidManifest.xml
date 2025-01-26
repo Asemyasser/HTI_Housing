@@ -1,0 +1,21 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.gradproject">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+
+    <application
+        android:label="gradproject"
+        android:icon="@mipmap/ic_launcher">
+
+        <!-- هنا يمكنك إضافة الأنشطة (Activities) وأي إعدادات أخرى لتطبيقك -->
+
+    </application>
+
+</manifest>
