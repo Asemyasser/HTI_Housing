@@ -36,7 +36,7 @@ function App() {
   return (
     <>
       <ToastContainer autoClose={2000} />
-      <Router basename="/Graduation_Project/">
+      <Router basename="/HTI_Housing/">
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             {/* Public Routes */}
