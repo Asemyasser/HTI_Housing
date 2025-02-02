@@ -5,7 +5,7 @@ The **Admin Dashboard** is a web-based interface built with **React.js** and **V
 
 It provides administrators with an intuitive and organized UI for handling student housing operations.  
 
-🔗 **Live Demo:** [HTI Housing Admin Dashboard](https://Asemyasser.github.io/Graduation_Project)  
+🔗 **Live Demo:** [HTI Housing Admin Dashboard](https://asemyasser.github.io/HTI_Housing/)  
 
 ---
 
