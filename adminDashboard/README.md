@@ -1,8 +1,50 @@
-# React + Vite
+# 🏠 HTI Housing Admin Dashboard  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Description  
+The **Admin Dashboard** is a web-based interface built with **React.js** and **Vite** to manage student accommodations, requests, payments, and complaints efficiently.  
 
-Currently, two official plugins are available:
+It provides administrators with an intuitive and organized UI for handling student housing operations.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 **Live Demo:** [HTI Housing Admin Dashboard](https://Asemyasser.github.io/Graduation_Project)  
+
+---
+
+## 🛠️ Technologies Used  
+| Technology   | Purpose |
+|-------------|---------|
+| **React.js** | Frontend framework for UI development |
+| **Vite** | Development environment for fast builds |
+| **Bootstrap & React-Bootstrap** | Responsive UI components |
+| **React-Router-Dom** | Navigation between pages |
+| **React-Hook-Form & Yup** | Form validation and handling |
+| **Axios** | API communication with the backend |
+| **React-Toastify** | User-friendly notifications |
+| **FontAwesome** | Icons for enhanced UI |
+| **Joi** | Data validation |
+| **gh-pages** | Deployment via GitHub Pages |
+
+---
+
+## 📦 Installation & Setup  
+
+### 1️⃣ Navigate to the Admin Dashboard Folder  
+```sh
+cd adminDashboard
+```
+### 2️⃣ Install Dependencies
+```sh
+npm install
+```
+### 3️⃣ Run the Development Server
+```sh
+npm run dev
+```
+
+---
+
+## 📩 Contact  
+For any inquiries, suggestions, or contributions, feel free to reach out:  
+
+📧 **Email:** [Asem Yasser](mailto:asemyasser42@gmail.com)
+🔗 **GitHub:** [AsemYasser](https://github.com/Asemyasser) 
+---
