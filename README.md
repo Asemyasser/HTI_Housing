@@ -11,6 +11,12 @@ By **reducing paperwork** and **increasing transparency**, the system improves e
 
 ---
 
+## 🌐 Live Demo  
+🚀 Check out the live version of the HTI Housing system here:  
+🔗 [Admin Dashboard](https://asemyasser.github.io/HTI_Housing/)  
+
+---
+
 ## ✨ Key Features
 
 ### 🎓 Student Features (Mobile App)
@@ -43,47 +49,22 @@ By **reducing paperwork** and **increasing transparency**, the system improves e
 
 ## 🚀 Installation & Setup
 
-### Prerequisites:
-- **Node.js** (for backend)
-- **MongoDB** (for database)
-- **Flutter** (for mobile app)
-- **Python & OpenCV** (for facial recognition)
-
-### Steps to Run the Project:
-1. **Clone the Repository**  
-   ```bash
-   git clone https://github.com/Asemyasser/HTI_Housing.git
-   cd HTI_Housing
-   ```
-2. **Set Up the Backend**
-   ```bash
-   cd backend
-   npm install
-   node index.js
-   ```
-3. **Set Up the Frontend**
-   ```bash
-   cd adminDashboard
-   npm install
-   npm run dev
-   ```
-4. **Set Up the Mobile App**
-   ```bash
-   cd mobile
-   flutter pub get
-   flutter run
-   ```
-5. **Run the Facial Recognition System**
-   ```bash
-   cd facial-recognition
-   python main.py
-   ```
+### 1️⃣ Clone the Repository  
+```sh
+git clone https://github.com/Asemyasser/HTI_Housing.git
+cd HTI_Housing
+```
+### 2️⃣ Install Backend
+Follow the setup guide for the backend:
+[📂 HTI Housing Backend](https://github.com/Asemyasser/HTI_Housing/tree/main/Backend)
 ---
-
-## 🌐 Live Demo  
-🚀 Check out the live version of the HTI Housing system here:  
-🔗 [Admin Dashboard](https://asemyasser.github.io/HTI_Housing/)  
-
+### 3️⃣ Install Web Dashboard
+Follow the setup guide for the admin dashboard:
+[📂 HTI Housing Web Dashboard](https://github.com/Asemyasser/HTI_Housing/tree/main/adminDashboard)
+---
+### 4️⃣ Install Mobile App
+Follow the setup guide for the mobile application:
+[📂 HTI Housing Mobile App](https://github.com/Asemyasser/HTI_Housing/tree/main/FlutterApp)
 ---
 
 ## 🎖️ Acknowledgments  
@@ -93,7 +74,7 @@ Special appreciation goes to:
 - **Asem Yasser** – Admin Dashboard  
 - **Youssef Tamer** – Backend
 - **Malak Ayman && Salma Ayman** - Flutter Application and Face recognition
-- **Salma Ibrahim** - UI/Ux Designer of (admin dashboard, and mobile App)  
+- **Salma Ibrahim** - UI/UX Designer of (admin dashboard, and mobile App)  
 - **Supervisors & Users** – For their valuable feedback  
 
 ---
@@ -101,7 +82,7 @@ Special appreciation goes to:
 ## 📩 Contact  
 For any inquiries, suggestions, or contributions, feel free to reach out:  
 
-📧 **Email:** [Asem Yasser](mailto:asemyasser42@gmail.com) *(Replace with actual email)*  
+📧 **Email:** [Asem Yasser](mailto:asemyasser42@gmail.com)
 🔗 **GitHub:** [AsemYasser](https://github.com/Asemyasser)  
 
 ---
