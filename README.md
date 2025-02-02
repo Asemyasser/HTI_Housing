@@ -57,14 +57,15 @@ cd HTI_Housing
 ### 2️⃣ Install Backend
 Follow the setup guide for the backend:
 [📂 HTI Housing Backend](https://github.com/Asemyasser/HTI_Housing/tree/main/Backend)
----
+
 ### 3️⃣ Install Web Dashboard
 Follow the setup guide for the admin dashboard:
 [📂 HTI Housing Web Dashboard](https://github.com/Asemyasser/HTI_Housing/tree/main/adminDashboard)
----
+
 ### 4️⃣ Install Mobile App
 Follow the setup guide for the mobile application:
 [📂 HTI Housing Mobile App](https://github.com/Asemyasser/HTI_Housing/tree/main/FlutterApp)
+
 ---
 
 ## 🎖️ Acknowledgments  
