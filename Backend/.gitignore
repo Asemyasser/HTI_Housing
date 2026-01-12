@@ -1,3 +1,13 @@
-/node_modules
-/config
 .env
+.env.local
+.env.production
+.env.development
+
+# Dependency directories
+node_modules
+dist
+dist-ssr
+# Logs
+logs
+*.log
+npm-debug.log*
