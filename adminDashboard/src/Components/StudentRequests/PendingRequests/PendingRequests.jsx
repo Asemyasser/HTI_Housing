@@ -1,109 +1,112 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./PendingRequests.module.css";
 import { useOutletContext } from "react-router-dom";
-import axios from "axios";
+import { useStudents } from "../../../hooks/useStudents";
+import { useStudentActions } from "../../../hooks/useStudentActions";
 
 function PendingRequests() {
   const [filteredData, setFilteredData, setData] = useOutletContext();
-  const [loadingButton, setLoadingButton] = useState(null);
-  const [loading, setLoading] = useState(true); // State to handle loading
-  const [error, setError] = useState(null); // State to handle errors
 
-  const hanldeRequest = async (studentId, status) => {
-    setLoadingButton(studentId);
-    try {
-      // Send the PATCH request to the API
-      const response = await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/admin/${status}/${studentId}`
-      );
-      console.log(response.data);
+  // 1. Use Hook to Fetch Data
+  const { loading, error } = useStudents(
+    "/user/students",
+    setFilteredData,
+    setData
+  );
 
-      // Update the UI to reflect the changes (e.g., remove the approved request)
-      setFilteredData((prevData) =>
-        prevData.filter((student) => student._id !== studentId)
-      );
-    } catch (err) {
-      console.error(
-        "Error approving request:",
-        err.response?.data || err.message
-      );
-    } finally {
-      setLoadingButton(null);
-    }
-  };
+  // 2. Use Hook to Handle Actions (Approve/Reject)
+  const { handleAction, actionLoadingId } = useStudentActions(setFilteredData);
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/user/students`,
-          {
-            headers: {
-              token: `${token}`,
-            },
-          }
-        ); // Fetch data from the API
+  if (loading)
+    return (
+      <tbody>
+        <tr>
+          <td colSpan="5" className="text-center py-5">
+            ...جاري تحميل البيانات
+          </td>
+        </tr>
+      </tbody>
+    );
 
-        setFilteredData(response.data.users);
-        setData(response.data.users);
-
-        console.log(response.data.users);
-      } catch (err) {
-        setError(err.response?.data?.message || err.message);
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStudents();
-  }, []);
-
-  if (loading) return <p>...جاري تحميل البيانات</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error)
+    return (
+      <tbody>
+        <tr>
+          <td colSpan="5" className="text-danger text-center py-5">
+            {error}
+          </td>
+        </tr>
+      </tbody>
+    );
 
   return (
     <>
       <thead className="thead-dark">
         <tr>
-          <th className="h4">الإجراءات</th>
-          <th className="h4">الإيميل الجامعي</th>
-          <th className="h4">الاسم</th>
-          <th className="h4">ID</th>
-          <th className="h4">القسم</th>
+          <th scope="col" className="h4">
+            الإجراءات
+          </th>
+          <th scope="col" className="h4">
+            الإيميل الجامعي
+          </th>
+          <th scope="col" className="h4">
+            الاسم
+          </th>
+          <th scope="col" className="h4">
+            ID
+          </th>
+          <th scope="col" className="h4">
+            القسم
+          </th>
         </tr>
       </thead>
       <tbody>
-        {filteredData.map((student) => (
-          <tr key={student._id}>
-            <td>
-              <button
-                className={`btn mx-1 rounded-pill px-4 ${styles.pendingBtn}`}
-                onClick={() => hanldeRequest(student._id, "reject-student")}
-                disabled={loadingButton === student._id}
-              >
-                رفض
-              </button>
-              <button
-                className={`btn mx-1 my-1 my-sm-0 rounded-pill px-4 ${styles.pendingBtn}`}
-                onClick={() => hanldeRequest(student._id, "approve-student")}
-                disabled={loadingButton === student._id}
-              >
-                موافقة
-              </button>
-              {loadingButton && (
-                <div className={styles.loadingOverlay}>
-                  <div className={`${styles.loader}`}></div>
+        {filteredData && filteredData.length > 0 ? (
+          filteredData.map((student) => (
+            <tr key={student._id}>
+              <td>
+                <div className="d-flex justify-content-center align-items-center gap-2 position-relative">
+                  <button
+                    className={`btn rounded-pill px-4 ${styles.pendingBtn}`}
+                    onClick={() => handleAction(student._id, "reject-student")}
+                    disabled={actionLoadingId === student._id}
+                    aria-label={`رفض الطالب ${student.name}`}
+                  >
+                    رفض
+                  </button>
+                  <button
+                    className={`btn rounded-pill px-4 ${styles.pendingBtn}`}
+                    onClick={() => handleAction(student._id, "approve-student")}
+                    disabled={actionLoadingId === student._id}
+                    aria-label={`موافقة على الطالب ${student.name}`}
+                  >
+                    موافقة
+                  </button>
+
+                  {actionLoadingId === student._id && (
+                    <div
+                      className={styles.loadingOverlay}
+                      role="status"
+                      aria-label="جاري التنفيذ..."
+                    >
+                      <div className={styles.loader}></div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </td>
+              <td>{student.email}</td>
+              <td>{student.name}</td>
+              <td>{student.ID}</td>
+              <td>{student.department}</td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="5" className="text-center py-4 text-muted">
+              لا يوجد طلبات قيد الانتظار حالياً
             </td>
-            <td>{student.email}</td>
-            <td>{student.name}</td>
-            <td>{student.ID}</td>
-            <td>{student.department}</td>
           </tr>
-        ))}
+        )}
       </tbody>
     </>
   );

@@ -1,63 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navs from "./Components/Nav/Navs";
 import "./Layout.css";
-function Layout({ setIsAuthenticated }) {
+
+// This checks every property, even if it's inside another object (like booking.student.name)
+const deepSearch = (item, query) => {
+  if (!item) return false;
+
+  // 1. If it's a string or number, check if it matches
+  if (typeof item === "string" || typeof item === "number") {
+    return String(item).toLowerCase().includes(query.toLowerCase());
+  }
+
+  // 2. If it's an array or object, loop through its children
+  if (typeof item === "object") {
+    return Object.values(item).some((value) => deepSearch(value, query));
+  }
+
+  return false;
+};
+
+function Layout() {
   const [collapsed, setCollapsed] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState([]); // Filtered student data
+
+  // Data States
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
-  // Use `useLocation` to get the current route
   const location = useLocation();
+  useEffect(() => {
+    setSearchQuery("");
+    setFilteredData(data);
+  }, [location.pathname, data]);
 
-  // Define routes where `Navs` and `section` class should not be displayed
-  const excludedRoutes = ["/login", "/register"];
-
-  // Check if the current route is excluded
-  const isExcludedRoute = excludedRoutes.includes(location.pathname);
-
+  // Handle Input Change
   const handleSearch = (e) => {
-    const query = e.target.value; // Get the current value from the input field
-    setSearchQuery(query); // Update the search query state (still necessary for state tracking)
-
-    if (query) {
-      const filtered = data.filter((item) => {
-        // Filter based on the current query (e.target.value)
-        return Object.values(item)
-          .join("")
-          .toLowerCase()
-          .includes(query.toLowerCase());
-      });
-      setFilteredData(filtered); // Update the filtered data
-    } else {
-      setFilteredData(data); // Reset to original data if input is empty
-    }
+    setSearchQuery(e.target.value);
   };
+
+  // Debouncing Logic with Deep Search
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (searchQuery) {
+        const filtered = data.filter((item) => deepSearch(item, searchQuery));
+        setFilteredData(filtered);
+      } else {
+        setFilteredData(data);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery, data]);
 
   return (
     <>
-      {/* Render `Navs` only if the route is not excluded */}
-      {!isExcludedRoute && (
-        <Navs
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-          setIsAuthenticated={setIsAuthenticated}
-          onSearch={handleSearch}
-          setSearchQuery={setSearchQuery}
-          searchQuery={searchQuery}
-        />
-      )}
-
-      {/* Conditionally apply `section` class */}
-      <div
-        className={
-          isExcludedRoute ? "" : `section ${collapsed ? "collapsed" : ""}`
-        }
+      <a
+        href="#main-content"
+        className="visually-hidden-focusable p-3 bg-light text-primary position-absolute top-0 start-0 z-3"
       >
-        {/* Render the nested routes */}
-        <Outlet context={{ filteredData, setFilteredData, setData, data }} />
-      </div>
+        تخطى إلى المحتوى الرئيسي
+      </a>
+
+      <Navs
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        onSearch={handleSearch}
+        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery}
+      />
+
+      <main
+        id="main-content"
+        className={`section ${collapsed ? "collapsed" : ""}`}
+        role="main"
+        tabIndex="-1"
+      >
+        <Outlet context={[filteredData, setFilteredData, setData]} />
+      </main>
     </>
   );
 }

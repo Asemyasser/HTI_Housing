@@ -6,7 +6,6 @@ import styles from "./Navs.module.css";
 const Navs = ({
   collapsed,
   setCollapsed,
-  setIsAuthenticated,
   onSearch,
   setSearchQuery,
   searchQuery,
@@ -19,8 +18,8 @@ const Navs = ({
         setTitle={setTitle}
         collapsed={collapsed}
         setCollapsed={setCollapsed}
-        setIsAuthenticated={setIsAuthenticated}
       />
+
       <TopNav
         title={title}
         collapsed={collapsed}

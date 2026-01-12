@@ -1,60 +1,62 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Card.module.css";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Card = ({ percentage, title, bgColor, path }) => {
+  const isString = typeof percentage === "string";
   const [currentPercentage, setCurrentPercentage] = useState(
-    typeof percentage === "string" ? 100 : 0
+    isString ? 100 : 0
   );
-  const navigate = useNavigate();
-  function cardClickHandler() {
-    navigate(path);
-  }
 
   useEffect(() => {
-    if (typeof percentage === "string") {
-      // Skip animation and set the white section to 100%
+    if (isString) {
       setCurrentPercentage(100);
       return;
     }
-    // Animate the percentage from 0 to the desired value
+
+    const target = Number(percentage);
     let progress = 0;
+
     const interval = setInterval(() => {
-      if (progress < percentage) {
+      if (progress < target) {
         progress++;
         setCurrentPercentage(progress);
       } else {
         clearInterval(interval);
       }
-    }, 15); // Adjust the interval time to control animation speed
+    }, 15);
 
     return () => clearInterval(interval);
-  }, [percentage]);
+  }, [percentage, isString]);
+
   return (
-    <div
-      onClick={cardClickHandler}
+    <Link
+      to={path}
       className={styles.card}
-      style={{
-        background: bgColor,
-      }}
+      style={{ background: bgColor }}
+      aria-label={`${title}: ${
+        isString ? percentage : `${currentPercentage}%`
+      }`}
     >
       <span
         className={styles.circle}
+        role="progressbar"
+        aria-label={`نسبة ${title}`}
+        aria-valuenow={isString ? 100 : currentPercentage}
+        aria-valuemin="0"
+        aria-valuemax="100"
         style={{
           background: `conic-gradient(white ${currentPercentage}%, #FFFFFF38 0%)`,
         }}
       >
         <div className={styles.innerCircle} style={{ background: bgColor }}>
-          <span>
-            {typeof percentage === "string"
-              ? percentage
-              : `${currentPercentage}%`}{" "}
-            {/* Show percentage normally */}
+          <span className={styles.percentageText}>
+            {isString ? percentage : `${currentPercentage}%`}
           </span>
         </div>
       </span>
-      <p className={styles.title}>{title}</p>
-    </div>
+      <p className={`${styles.title} h5`}>{title}</p>
+    </Link>
   );
 };
 

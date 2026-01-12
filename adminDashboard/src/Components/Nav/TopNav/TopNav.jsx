@@ -1,3 +1,6 @@
+import { useState, useEffect, useRef } from "react";
+import styles from "./TopNav.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
   faMagnifyingGlass,
@@ -6,111 +9,64 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styles from "./TopNav.module.css";
-import React, { useEffect, useState } from "react";
 import notificationsBell from "../../../assets/imgs/notificationBell.png";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNotifications } from "../../../hooks/useNotifications";
 
 function TopNav({ collapsed, setCollapsed, title, onSearch, searchQuery }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
+  const { notifications, deleteNotification } = useNotifications();
 
-  const token = localStorage.getItem("authToken");
+  const searchRef = useRef(null);
+  const notifRef = useRef(null);
 
+  const toggleSidebar = () => setCollapsed((prev) => !prev);
+  const toggleNotifications = () => setShowNotifications((prev) => !prev);
+  const toggleSearchBar = () => setShowSearchBar((prev) => !prev);
+
+  // 2. Click Outside Logic
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const [requestsResponse, receiptsResponse] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/students`, {
-            headers: { token: `${token}` },
-          }),
-          axios.get(
-            `${import.meta.env.VITE_API_BASE_URL}/payment/pendingPayment`,
-            {
-              headers: {
-                token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzY2YjZjZGQzMTYxYzc1YWYwYWQ4M2IiLCJlbWFpbCI6InlvdXNmdGFtZXIxMUBnbWFpbC5jb20iLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTczNDc4NDg0Mn0.KLo76IBdty3i_P96l1hLMNGwa2S-2DOLYSw-RU9u-aQ`,
-              },
-            }
-          ),
-        ]);
-        console.log(requestsResponse);
-        console.log(receiptsResponse);
+    const handleClickOutside = (event) => {
+      // If Search is open AND click is OUTSIDE the search wrapper -> Close it
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSearchBar(false);
+      }
 
-        const requests = requestsResponse.data.users.map((item) => ({
-          type: "request",
-          timestamp: item.createdAt || new Date().toISOString(),
-        }));
-
-        const receipts = receiptsResponse.data.data.map((item) => ({
-          type: "receipt",
-          timestamp: item.createdAt || new Date().toISOString(),
-        }));
-
-        const fetchedNotifications = [...requests, ...receipts];
-        const storedNotifications =
-          JSON.parse(localStorage.getItem("notifications")) || [];
-
-        // Retrieve the deleted list
-        const deletedList =
-          JSON.parse(localStorage.getItem("deletedNotifications")) || [];
-
-        // Filter out deleted notifications
-        const allNotifications = [
-          ...storedNotifications,
-          ...fetchedNotifications,
-        ].filter(
-          (notif) => !deletedList.includes(notif.timestamp) // Match by unique identifier
-        );
-
-        setNotifications(allNotifications);
-        localStorage.setItem("notifications", JSON.stringify(allNotifications));
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
+      // If Notifications are open AND click is OUTSIDE the notification wrapper -> Close it
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotifications(false);
       }
     };
 
-    fetchNotifications();
-  }, [token]);
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
 
-  const toggleSidebar = () => {
-    setCollapsed((prev) => !prev);
-  };
-
-  const toggleNotifications = () => {
-    setShowNotifications((prev) => !prev);
-  };
-
-  const toggleSearchBar = () => {
-    setShowSearchBar((prev) => !prev);
-  };
-
-  const deleteNotification = (index) => {
-    const deletedNotification = notifications[index];
-    const updatedNotifications = notifications.filter((_, i) => i !== index);
-
-    setNotifications(updatedNotifications);
-    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-
-    // Add to deleted list
-    const deletedList =
-      JSON.parse(localStorage.getItem("deletedNotifications")) || [];
-    deletedList.push(deletedNotification.timestamp); // Use a unique identifier
-    localStorage.setItem("deletedNotifications", JSON.stringify(deletedList));
-  };
+    // Cleanup the listener on unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const getTimeSince = (timestamp) => {
     const now = new Date();
-    const timeDifference = Math.floor((now - new Date(timestamp)) / 1000); // Difference in seconds
+    const timeDifference = Math.floor((now - new Date(timestamp)) / 1000);
     if (timeDifference < 60) return `منذ ${timeDifference} ثواني`;
     if (timeDifference < 3600)
       return `منذ ${Math.floor(timeDifference / 60)} دقائق`;
     if (timeDifference < 86400)
       return `منذ ${Math.floor(timeDifference / 3600)} ساعات`;
     return `منذ ${Math.floor(timeDifference / 86400)} أيام`;
+  };
+
+  const handleNotificationKeyDown = (e, notif, index) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      notif.type === "request" ? navigate("/requests") : navigate("/receipts");
+      deleteNotification(index);
+      setShowNotifications(false);
+    }
   };
 
   return (
@@ -120,33 +76,44 @@ function TopNav({ collapsed, setCollapsed, title, onSearch, searchQuery }) {
       <div className={`${styles.topNav} ${collapsed ? styles.collapsed : ""} `}>
         <div className="container-fluid">
           <div className="row align-items-center ">
+            {/* Sidebar Toggle & Title */}
             <div className="col-9">
               <div className="d-flex align-items-center gap-3 ">
                 <button
                   onClick={toggleSidebar}
                   className={`${styles.toggleButton}`}
                   aria-expanded={!collapsed}
-                  aria-label="Toggle navigation"
+                  aria-label={collapsed ? "فتح القائمة" : "غلق القائمة"}
                 >
-                  <FontAwesomeIcon icon={faBars} />
+                  <FontAwesomeIcon icon={faBars} aria-hidden="true" />
                 </button>
                 <h1 className={`${styles.title} mb-0 h2`}>{title}</h1>
               </div>
             </div>
 
+            {/* Icons Section */}
             <div className="col-3 ps-0">
               <div
                 className={`${styles.icons} d-flex gap-3 align-items-center justify-content-end`}
               >
-                <div className={styles.searchWrapper}>
-                  <FontAwesomeIcon
-                    icon={faMagnifyingGlass}
-                    size="lg"
+                {/* Search Bar Wrapper with Ref */}
+                <div className={styles.searchWrapper} ref={searchRef}>
+                  <button
                     onClick={toggleSearchBar}
-                    className={`${styles.searchIcon} ${
-                      showSearchBar ? styles.active : ""
-                    }`}
-                  />
+                    className="btn p-0 border-0"
+                    aria-label="بحث"
+                    aria-expanded={showSearchBar}
+                  >
+                    <FontAwesomeIcon
+                      icon={faMagnifyingGlass}
+                      size="lg"
+                      className={`${styles.searchIcon} ${
+                        showSearchBar ? styles.active : ""
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </button>
+
                   {showSearchBar && (
                     <input
                       type="text"
@@ -154,90 +121,116 @@ function TopNav({ collapsed, setCollapsed, title, onSearch, searchQuery }) {
                       value={searchQuery}
                       onChange={onSearch}
                       className={`${styles.searchInput}`}
+                      autoFocus
+                      aria-label="مربع البحث"
                     />
                   )}
                 </div>
-                <div className={styles.notificationWrapper}>
-                  <FontAwesomeIcon
-                    icon={faBell}
-                    size="lg"
+
+                {/* Notifications Wrapper with Ref */}
+                <div className={styles.notificationWrapper} ref={notifRef}>
+                  <button
                     onClick={toggleNotifications}
-                    className={`${styles.bellIcon} ${
-                      showNotifications ? styles.active : ""
-                    }`}
-                  />
-                  {notifications.length > 0 && (
-                    <span className={styles.notificationDot}></span>
+                    className="btn p-0 border-0 position-relative"
+                    aria-label={`الإشعارات - ${notifications.length} غير مقروءة`}
+                    aria-expanded={showNotifications}
+                  >
+                    <FontAwesomeIcon
+                      icon={faBell}
+                      size="lg"
+                      className={`${styles.bellIcon} ${
+                        showNotifications ? styles.active : ""
+                      }`}
+                      aria-hidden="true"
+                    />
+                    {notifications.length > 0 && (
+                      <span className={styles.notificationDot}></span>
+                    )}
+                  </button>
+
+                  {showNotifications && (
+                    <div
+                      className={styles.dropdownContainer}
+                      role="dialog"
+                      aria-label="قائمة الإشعارات"
+                    >
+                      {notifications && notifications.length > 0 ? (
+                        <div className={`${styles.notifications}`}>
+                          {notifications.map((notif, index) => (
+                            <div
+                              key={index}
+                              className={styles.notificationItem}
+                              role="button"
+                              tabIndex="0"
+                              onKeyDown={(e) =>
+                                handleNotificationKeyDown(e, notif, index)
+                              }
+                              onClick={() => {
+                                notif.type === "request"
+                                  ? navigate("/requests")
+                                  : navigate("/receipts");
+                                deleteNotification(index);
+                                setShowNotifications(false);
+                              }}
+                            >
+                              <div
+                                className={`${styles.notificationContent} d-flex justify-content-between align-items-center`}
+                              >
+                                <div
+                                  className="d-flex align-items-center justify-content-start gap-2 flex-grow-1"
+                                  style={{ minWidth: 0 }}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={
+                                      notif.type === "request"
+                                        ? faUsers
+                                        : faReceipt
+                                    }
+                                  />
+                                  <p className="h6 mb-0 text-truncate">
+                                    {notif.type === "request"
+                                      ? "لديك طلب جديد"
+                                      : "لديك إيصال جديد"}
+                                  </p>
+                                </div>
+
+                                <div className="d-flex align-items-center gap-2 flex-shrink-0">
+                                  <span
+                                    className={`${styles.timestamp} text-muted`}
+                                  >
+                                    {getTimeSince(notif.timestamp)}
+                                  </span>
+                                  <button className="btn btn-link p-0">
+                                    <FontAwesomeIcon
+                                      icon={faTrashAlt}
+                                      className={`${styles.deleteIcon} text-danger`}
+                                      aria-hidden="true"
+                                    />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div
+                          className={`${styles.noNotifications} text-center`}
+                        >
+                          <img
+                            src={notificationsBell}
+                            alt="No Notifications"
+                            className=""
+                          />
+                          <p className="h4">لا يوجد إشعارات حالياً</p>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {showNotifications && (
-          <div>
-            {notifications && notifications.length > 0 ? (
-              <div className={`${styles.notifications}`}>
-                {notifications.map((notif, index) => (
-                  <div
-                    key={index}
-                    className={styles.notificationItem}
-                    onClick={() => {
-                      notif.type === "request"
-                        ? navigate("/requests")
-                        : navigate("/receipts");
-                      deleteNotification(index);
-                      setShowNotifications(false);
-                    }}
-                  >
-                    <div
-                      className={`${styles.notificationContent} d-flex justify-content-between align-items-center`}
-                    >
-                      <div className="d-flex align-items-center justify-content-start gap-2 right">
-                        {notif.type === "request" ? (
-                          <FontAwesomeIcon
-                            icon={faUsers}
-                            size="xl"
-                            className={styles.iconRequest}
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={faReceipt}
-                            size="xl"
-                            className={styles.iconReceipt}
-                          />
-                        )}
-                        <p className="h5 mb-1">
-                          {notif.type === "request"
-                            ? "لديك طلب جديد"
-                            : "لديك إيصال جديد"}
-                        </p>
-                      </div>
-                      <div className="d-flex align-items-center justify-content-between gap-1 gap-sm-3 ">
-                        <span className={`${styles.timestamp} text-muted fs-6`}>
-                          {getTimeSince(notif.timestamp)}
-                        </span>
-                        <FontAwesomeIcon
-                          icon={faTrashAlt}
-                          className={`${styles.deleteIcon} text-danger`}
-                          onClick={(e) => {
-                            e.stopPropagation(); // Prevent navigation on delete
-                            deleteNotification(index);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className={`${styles.noNotifications} text-center`}>
-                <img src={notificationsBell} alt="Bell" className="" />
-                <p className="h4">لا يوجد إشعارات حالياً</p>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </>
   );

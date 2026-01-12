@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import styles from "./SideNav.module.css";
 import logo from "../../../assets/imgs/Logo.png";
 import "@fontsource/inter";
@@ -11,35 +10,15 @@ import {
   faUsers,
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
-const SideNav = ({ collapsed, setTitle, setIsAuthenticated }) => {
-  const location = useLocation();
-  const [activeLink, setActiveLink] = useState("");
+const SideNav = ({ collapsed, setTitle }) => {
+  const { logout } = useAuth();
 
-  useEffect(() => {
-    // Map base paths to activeLink values
-    const pathToLinkMap = {
-      "/": "home",
-      "/requests": "requests",
-      "/receipts": "receipts",
-      "/settings": "settings",
-    };
-
-    // Find the matching key from pathToLinkMap for the current pathname
-    const activeLinkKey = Object.keys(pathToLinkMap).find(
-      (path) =>
-        path === location.pathname ||
-        (path !== "/" && location.pathname.startsWith(path))
-    );
-
-    setActiveLink(pathToLinkMap[activeLinkKey] || "");
-  }, [location.pathname]);
-
-  const handleLinkClick = (linkName, title) => {
-    setActiveLink(linkName);
-    setTitle(title);
-  };
+  // Helper to apply classes automatically based on Route
+  const navLinkClass = ({ isActive }) =>
+    `${styles.navLink} ${isActive ? styles.activeLink : ""}`;
 
   return (
     <div
@@ -47,109 +26,96 @@ const SideNav = ({ collapsed, setTitle, setIsAuthenticated }) => {
         collapsed ? styles.collapsed : styles.open
       } d-flex flex-column vh-100`}
     >
+      {/* Header / Logo */}
       <div className={`${styles.header} p-3 `}>
-        <a href="#">
-          <img src={logo} alt="Logo" className={`${styles.logo}`} />
-        </a>
+        <Link to="/" aria-label="الذهاب إلى الصفحة الرئيسية">
+          <img src={logo} alt="HTI Housing Logo" className={`${styles.logo}`} />
+        </Link>
         {!collapsed && (
           <h1 className={`${styles.title} h2 ms-3 ${styles.textContainer} `}>
             HTI Housing
           </h1>
         )}
       </div>
+
+      {/* Navigation Links */}
       <ul className="nav flex-column mt-4 me-3 text-end fs-5 ">
         <li className="nav-item w-100">
           <NavLink
-            onClick={() => {
-              handleLinkClick("home", "الواجهة الرئيسية");
-            }}
             to="/"
-            className={`${styles.navLink}  ${
-              activeLink === "home" ? styles.activeLink : ""
-            } `}
+            onClick={() => setTitle("الواجهة الرئيسية")}
+            className={navLinkClass}
+            aria-label="الواجهة الرئيسية"
           >
             {!collapsed && (
               <span className={`${styles.textContainer}`}>
                 الواجهة الرئيسية
               </span>
             )}
-            <FontAwesomeIcon icon={faHouse} />
+            <FontAwesomeIcon icon={faHouse} aria-hidden="true" />
           </NavLink>
         </li>
 
         <li className="nav-item w-100">
           <NavLink
-            onClick={() => {
-              handleLinkClick("requests", "طلبات الإقامة");
-            }}
             to="/requests"
-            className={`${styles.navLink}  ${
-              activeLink === "requests" ? styles.activeLink : ""
-            } `}
+            onClick={() => setTitle("طلبات الإقامة")}
+            className={navLinkClass}
+            aria-label="طلبات الإقامة"
           >
             {!collapsed && (
               <span className={`${styles.textContainer} `}>طلبات الإقامة</span>
             )}
-            <FontAwesomeIcon icon={faUsers} />
+            <FontAwesomeIcon icon={faUsers} aria-hidden="true" />
           </NavLink>
         </li>
 
         <li className="nav-item w-100">
           <NavLink
-            onClick={() => {
-              handleLinkClick("receipts", "إيصالات الدفع");
-            }}
             to="/receipts"
-            className={`${styles.navLink}  ${
-              activeLink === "receipts" ? styles.activeLink : ""
-            }`}
+            onClick={() => setTitle("إيصالات الدفع")}
+            className={navLinkClass}
+            aria-label="إيصالات الدفع"
           >
             {!collapsed && (
               <span className={`${styles.textContainer}`}>إيصلات الدفع</span>
             )}
-            <FontAwesomeIcon icon={faReceipt} />
+            <FontAwesomeIcon icon={faReceipt} aria-hidden="true" />
           </NavLink>
         </li>
 
         <li className="nav-item w-100">
           <NavLink
-            onClick={() => {
-              handleLinkClick("settings", "الإعدادات");
-            }}
             to="/settings"
-            className={`${styles.navLink}  ${
-              activeLink === "settings" ? styles.activeLink : ""
-            }`}
+            onClick={() => setTitle("الإعدادات")}
+            className={navLinkClass}
+            aria-label="الإعدادات"
           >
             {!collapsed && (
               <span className={`${styles.textContainer}`}>الإعدادات</span>
             )}
-            <FontAwesomeIcon icon={faGear} />
+            <FontAwesomeIcon icon={faGear} aria-hidden="true" />
           </NavLink>
         </li>
       </ul>
 
-      <div className={`${styles.footer} mt-auto w-100 text-end  fs-5 mb-4`}>
+      {/* Footer / Logout */}
+      <div className={`${styles.footer} mt-auto w-100 text-end fs-5 mb-4`}>
         <NavLink
-          onClick={() => {
-            // Remove the token and role from localStorage
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("userRole");
-            // Set authentication state to false
-            setIsAuthenticated(!!localStorage.getItem("authToken"));
-            // Update active link and collapse the side navigation if needed
-            handleLinkClick("logout");
-          }}
           to="/"
-          className={`${styles.navLink} ${
-            activeLink === "logout" ? styles.activeLink : ""
-          }  me-3 pt-3 mt-2 `}
+          onClick={(e) => {
+            e.preventDefault();
+            logout();
+          }}
+          className={`${styles.navLink} me-3 pt-3 mt-2`}
+          aria-label="تسجيل خروج"
         >
           {!collapsed && (
-            <span className={`${styles.textContainer} `}>تسجل خروج</span>
+            <span className={`${styles.textContainer} `}>تسجيل خروج</span>
           )}
-          <FontAwesomeIcon icon={faArrowRightFromBracket} />
+          <FontAwesomeIcon icon={faArrowRightFromBracket} aria-hidden="true" />
         </NavLink>
+
         <div
           className={`${styles.copyright} ${
             collapsed ? styles.collapsed : ""

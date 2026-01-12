@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import styles from "./StudentRequests.module.css";
 import {
   faFileCircleCheck,
@@ -6,79 +5,67 @@ import {
   faFileCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
+import { NavLink, Outlet, useOutletContext } from "react-router-dom";
 
 function StudentRequests() {
-  const { filteredData, setFilteredData, setData } = useOutletContext();
-  const location = useLocation();
-  const [active, setActive] = useState("");
+  const [filteredData, setFilteredData, setData] = useOutletContext();
 
-  useEffect(() => {
-    const pathToLinkMap = {
-      "/requests": "pending",
-      "/requests/accepted": "accepted",
-      "/requests/rejected": "rejected",
-    };
-    setActive(pathToLinkMap[location.pathname] || "");
-  }, [location.pathname]);
+  const getLinkClass = ({ isActive }) => `${isActive ? styles.active : ""} `;
 
   return (
-    <div className={`${styles.section}  `}>
+    <div className={`${styles.section}`}>
       <div className="container">
+        {/* Navigation Tabs */}
         <ul
-          className={`${styles["requests-status"]} row row-gap-2 justify-content-center mt-5 mt-sm-0`}
+          className={`${styles["requests-status"]} row row-gap-2 justify-content-center mt-5 mt-sm-0 list-unstyled`}
+          aria-label="حالة الطلبات"
         >
-          <div className="col-md-4 col-12 ">
-            <li>
-              <Link
-                to="/requests"
-                onClick={() => {
-                  setActive("pending");
-                }}
-                className={`${active === "pending" ? styles.active : ""} `}
-              >
-                <FontAwesomeIcon icon={faFileCircleExclamation} size={"lg"} />
-                <h3 className="h4">طلبات قيد الانتظار</h3>
-              </Link>
-            </li>
-          </div>
+          <li className="col-md-4 col-12 text-center">
+            <NavLink to="/requests" end className={getLinkClass}>
+              <FontAwesomeIcon
+                icon={faFileCircleExclamation}
+                size="lg"
+                aria-hidden="true"
+              />
+              <h3 className="h4 ">طلبات قيد الانتظار</h3>
+            </NavLink>
+          </li>
 
-          <div className="col-md-4 col-12 ">
-            <li>
-              <Link
-                to="/requests/accepted"
-                onClick={() => {
-                  setActive("accepted");
-                }}
-                className={`${active === "accepted" ? styles.active : ""}`}
-              >
-                <FontAwesomeIcon icon={faFileCircleCheck} size={"lg"} />
-                <h3 className="h4">طلبات موافق عليها</h3>
-              </Link>
-            </li>
-          </div>
+          <li className="col-md-4 col-12 text-center">
+            <NavLink to="/requests/accepted" className={getLinkClass}>
+              <FontAwesomeIcon
+                icon={faFileCircleCheck}
+                size="lg"
+                aria-hidden="true"
+              />
+              <h3 className="h4 ">طلبات موافق عليها</h3>
+            </NavLink>
+          </li>
 
-          <div className="col-md-4 col-12 ">
-            <li>
-              <Link
-                to="/requests/rejected"
-                onClick={() => {
-                  setActive("rejected");
-                }}
-                className={`${active === "rejected" ? styles.active : ""}`}
-              >
-                <FontAwesomeIcon icon={faFileCircleXmark} size={"lg"} />
-                <h3 className="h4">طلبات مرفوضة</h3>
-              </Link>
-            </li>
-          </div>
+          <li className="col-md-4 col-12 text-center">
+            <NavLink to="/requests/rejected" className={getLinkClass}>
+              <FontAwesomeIcon
+                icon={faFileCircleXmark}
+                size="lg"
+                aria-hidden="true"
+              />
+              <h3 className="h4 ">طلبات مرفوضة</h3>
+            </NavLink>
+          </li>
         </ul>
+
+        {/* Content Table */}
         <div className="row">
           <div className="container my-4">
             <div className="table-responsive">
               <table
-                className={`table  ${styles.parent} table-borderless text-center`}
+                className={`table ${styles.parent} table-borderless text-center`}
               >
+                {/* IMPORANT: 
+                  Because <Outlet> is inside <table>, your child components 
+                  (Pending, Accepted, Rejected) MUST return <thead> or <tbody>.
+                  If they return <div>, the console will throw warnings.
+                */}
                 <Outlet context={[filteredData, setFilteredData, setData]} />
               </table>
             </div>

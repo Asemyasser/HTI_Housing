@@ -1,63 +1,77 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useStudents } from "../../../hooks/useStudents";
 
 function RejectedRequests() {
   const [filteredData, setFilteredData, setData] = useOutletContext();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken"); // Retrieve token from storage
-    const fetchRejectedStudents = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/user/students/rejected`,
-          {
-            headers: {
-              token: `${token}`,
-            },
-          }
-        ); // Fetch data from the API
+  // Fetch Rejected Students
+  const { loading, error } = useStudents(
+    "/user/students/rejected",
+    setFilteredData,
+    setData
+  );
 
-        setFilteredData(response.data.users);
-        setData(response.data.users);
+  if (loading)
+    return (
+      <tbody>
+        <tr>
+          <td colSpan="5" className="text-center py-5">
+            ...جاري تحميل البيانات
+          </td>
+        </tr>
+      </tbody>
+    );
 
-        console.log(response.data.users);
-      } catch (err) {
-        setError(err.response?.data?.message || err.message); // Handle errors
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchRejectedStudents();
-  }, []);
-
-  if (loading) return <p>...جاري تحميل البيانات</p>; // Show loading state
-  if (error) return <p>Error: {error}</p>; // Show error state
+  if (error)
+    return (
+      <tbody>
+        <tr>
+          <td colSpan="5" className="text-danger text-center py-5">
+            {error}
+          </td>
+        </tr>
+      </tbody>
+    );
 
   return (
     <>
       <thead className="thead-dark">
         <tr>
-          <th className="h4">الإيميل الجامعي</th>
-          <th className="h4">الاسم</th>
-          <th className="h4">ID</th>
-          <th className="h4">القسم</th>
-          <th className="h4">رقم</th>
+          <th scope="col" className="h4">
+            الإيميل الجامعي
+          </th>
+          <th scope="col" className="h4">
+            الاسم
+          </th>
+          <th scope="col" className="h4">
+            ID
+          </th>
+          <th scope="col" className="h4">
+            القسم
+          </th>
+          <th scope="col" className="h4">
+            رقم
+          </th>
         </tr>
       </thead>
       <tbody>
-        {filteredData.map((row, index) => (
-          <tr key={row._id}>
-            <td>{row.email}</td>
-            <td>{row.name}</td>
-            <td>{row.ID}</td>
-            <td>{row.department}</td>
-            <td>{index + 1}</td>
+        {filteredData && filteredData.length > 0 ? (
+          filteredData.map((row, index) => (
+            <tr key={row._id}>
+              <td>{row.email}</td>
+              <td>{row.name}</td>
+              <td>{row.ID}</td>
+              <td>{row.department}</td>
+              <td>{index + 1}</td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="5" className="text-center py-4 text-muted">
+              لا يوجد طلبات مرفوضة حالياً
+            </td>
           </tr>
-        ))}
+        )}
       </tbody>
     </>
   );

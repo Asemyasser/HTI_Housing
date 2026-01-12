@@ -1,104 +1,101 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Modal, Button } from "react-bootstrap"; // Import Modal and Button from React-Bootstrap
-import { toast } from "react-toastify"; // Import toast for notifications
+import { Modal, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 import styles from "./ReceiptDetails.module.css";
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
-import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+import api from "../../services/api";
 
 function ReceiptDetails() {
-  const { id } = useParams(); // Get the receipt ID from the URL
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true); // State to handle loading
-  const [error, setError] = useState(null); // State to handle errors
-  const [receipt, setReceipt] = useState(null); // State to store the receipt data
+
+  // State management
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [receipt, setReceipt] = useState(null);
 
   const [showModal, setShowModal] = useState(false);
-  const [actionType, setActionType] = useState(null); // Track the action (accept or reject)
-  const [showImage, setShowImage] = useState(false); // State to show the large image modal
+  const [actionType, setActionType] = useState(null);
+  const [showImage, setShowImage] = useState(false);
 
-  const hanldeReceipt = async (status) => {
-    setActionType(status);
-    try {
-      // Send the PATCH request to the API
-      const response = await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL}/payment/reviewPayment/${id}`,
-        { status },
-        {
-          headers: {
-            token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzY2YjZjZGQzMTYxYzc1YWYwYWQ4M2IiLCJlbWFpbCI6InlvdXNmdGFtZXIxMUBnbWFpbC5jb20iLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTczNDc4NDg0Mn0.KLo76IBdty3i_P96l1hLMNGwa2S-2DOLYSw-RU9u-aQ`,
-          },
-        }
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.error(
-        `Error ${status === "approved" ? "approving" : "rejecting"} request:`,
-        err.response?.data || err.message
-      );
-    } finally {
-      setActionType(null);
-    }
-  };
-
-  // Find the receipt by ID
+  // 1. Fetch Receipt Data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchReceipt = async () => {
       try {
-        const token = localStorage.getItem("authToken");
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/payment/PendingPayment/${id}`,
-          {
-            headers: {
-              token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzY2YjZjZGQzMTYxYzc1YWYwYWQ4M2IiLCJlbWFpbCI6InlvdXNmdGFtZXIxMUBnbWFpbC5jb20iLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTczNDc4NDg0Mn0.KLo76IBdty3i_P96l1hLMNGwa2S-2DOLYSw-RU9u-aQ`,
-            },
-          }
-        );
-
+        const response = await api.get(`/payment/PendingPayment/${id}`);
         setReceipt(response.data);
-        console.log(response.data);
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        // Safe error handling for fetch
+        const msg = err.response?.data?.message || err.message;
+        setError(typeof msg === "string" ? msg : JSON.stringify(msg));
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchReceipt();
   }, [id]);
 
-  // Handle the action when confirmed
-  const handleAction = () => {
-    // Close the modal
-    setShowModal(false);
+  // 2. Handle Approve/Reject Submission
+  const handleReviewSubmit = async () => {
+    try {
+      await api.patch(`/payment/reviewPayment/${id}`, { status: actionType });
 
-    // Show toast based on the action type
-    if (actionType === "approved") {
-      toast.success("تمت موافقة على الحجز بنجاح");
-    } else if (actionType === "rejected") {
-      toast.error("تم رفض الحجز");
+      if (actionType === "approved") {
+        toast.success("تمت الموافقة على الحجز بنجاح");
+      } else {
+        toast.error("تم رفض الحجز");
+      }
+
+      navigate("/receipts");
+    } catch (err) {
+      console.error(err);
+
+      let errorMessage = "حدث خطأ أثناء تنفيذ الإجراء";
+      const resData = err.response?.data;
+
+      if (resData) {
+        if (typeof resData === "string") {
+          errorMessage = resData;
+        } else if (resData.message) {
+          if (typeof resData.message === "string") {
+            errorMessage = resData.message;
+          } else {
+            // If it's an object/array, stringify it safely
+            errorMessage = JSON.stringify(resData.message);
+          }
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      toast.error(errorMessage);
+    } finally {
+      setShowModal(false);
+      setActionType(null);
     }
-
-    // After the action is confirmed, navigate back to the receipts page
-    navigate("/receipts");
   };
 
-  //  // Show the large image
   const openImage = () => setShowImage(true);
-
-  // Close the large image
   const closeImage = () => setShowImage(false);
 
   if (loading)
     return (
-      <p className="d-flex justify-content-center align-items-center">
+      <p
+        role="status"
+        className="d-flex justify-content-center align-items-center mt-5"
+      >
         ...جاري تحميل البيانات
       </p>
     );
   if (error)
     return (
-      <p className="d-flex justify-content-center align-items-center">
+      <p
+        role="alert"
+        className="d-flex justify-content-center align-items-center mt-5 text-danger"
+      >
         Error: {error}
       </p>
     );
@@ -106,42 +103,61 @@ function ReceiptDetails() {
   return (
     <div className="container">
       <div className={`card p-4 ${styles.receiptCard}`}>
+        {/* Student Details Section */}
         <div className="row mb-5">
           <div className="col-12 col-md-3 text-center">
             <strong>الإيميل الجامعي</strong>
-            <p className="mt-2">{receipt.data.booking.student.email}</p>
+            <p className="mt-2">
+              {receipt?.data?.booking?.student?.email || "N/A"}
+            </p>
           </div>
           <div className="col-12 col-md-3 text-center">
             <strong>الاسم</strong>
-            <p className="mt-2">{receipt.data.booking.student.name}</p>
+            <p className="mt-2">
+              {receipt?.data?.booking?.student?.name || "N/A"}
+            </p>
           </div>
           <div className="col-12 col-md-3 text-center">
             <strong>ID</strong>
-            <p className="mt-2">{receipt.data?.booking.student.ID}</p>
+            <p className="mt-2">
+              {receipt?.data?.booking?.student?.ID || "N/A"}
+            </p>
           </div>
           <div className="col-12 col-md-3 text-center">
             <strong>القسم</strong>
-            <p className="mt-2">{receipt.data?.booking.student.department}</p>
+            <p className="mt-2">
+              {receipt?.data?.booking?.student?.department || "N/A"}
+            </p>
           </div>
         </div>
 
+        {/* Receipt Image Section */}
         <div className="row mb-5 justify-content-center">
           <div className="col-12 text-center">
-            <img
-              src={receipt.data.receiptImage.secure_url} // Placeholder for the receipt image
-              alt="Receipt"
-              className="img-fluid  shadow"
-              onClick={openImage} // Open large image on click
-            />
+            <button
+              type="button"
+              className="btn p-0 border-0"
+              onClick={openImage}
+              aria-label="عرض الإيصال بحجم كامل"
+            >
+              <img
+                src={receipt?.data?.receiptImage?.secure_url}
+                alt="Receipt Thumbnail"
+                className="img-fluid shadow"
+                style={{ cursor: "pointer", maxHeight: "400px" }}
+              />
+            </button>
+            <p className="text-muted mt-2 small">اضغط على الصورة للتكبير</p>
           </div>
         </div>
 
+        {/* Action Buttons */}
         <div className="d-flex flex-column flex-md-row justify-content-center gap-4">
           <button
             className={`btn btn-danger py-2 px-1 px-sm-5 fs-4 rounded-pill ${styles.actionBtn}`}
             onClick={() => {
               setActionType("rejected");
-              setShowModal(true); // Show modal on reject button click
+              setShowModal(true);
             }}
           >
             رفض الحجز
@@ -150,7 +166,7 @@ function ReceiptDetails() {
             className={`btn btn-success py-2 px-1 px-sm-5 fs-4 rounded-pill ${styles.actionBtn}`}
             onClick={() => {
               setActionType("approved");
-              setShowModal(true); // Show modal on accept button click
+              setShowModal(true);
             }}
           >
             موافقة على الحجز
@@ -158,7 +174,7 @@ function ReceiptDetails() {
         </div>
       </div>
 
-      {/* Modal for confirmation */}
+      {/* Confirmation Modal */}
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
@@ -179,27 +195,29 @@ function ReceiptDetails() {
             إلغاء
           </Button>
           <Button
-            variant="primary"
-            onClick={() => {
-              handleAction();
-              hanldeReceipt(actionType);
-            }}
-            // disabled={actionType}
+            variant={actionType === "approved" ? "success" : "danger"}
+            onClick={handleReviewSubmit}
           >
             تأكيد
           </Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Modal for the large image */}
+      {/* Large Image Modal */}
       {showImage && (
-        <div className={styles.imageModal} onClick={closeImage}>
+        <div
+          className={styles.imageModal}
+          onClick={closeImage}
+          role="dialog"
+          aria-modal="true"
+          aria-label="صورة الإيصال"
+        >
           <div
             className={styles.imageModalContent}
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={receipt.data.receiptImage.secure_url} // Placeholder for the receipt image
+              src={receipt?.data?.receiptImage?.secure_url}
               alt="Large Receipt"
               className="img-fluid"
             />

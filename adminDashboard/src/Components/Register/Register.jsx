@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useForm } from "../../hooks/useForm";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useForm } from "../../hooks/useForm";
 import styles from "./Register.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../assets/imgs/loginLogo.png";
 import htiBuilding from "../../assets/imgs/hti-building.png";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [formErrors, setFormErrors] = useState({
@@ -20,7 +21,16 @@ const Register = () => {
     `${import.meta.env.VITE_API_BASE_URL}/auth/dashboard/signup`,
     (response) => {
       if (response.success) {
-        alert(response.message);
+        let successMessage = "تم إنشاء الحساب بنجاح";
+        if (response.message) {
+          if (typeof response.message === "string") {
+            successMessage = response.message;
+          } else {
+            successMessage = "تم إنشاء الحساب بنجاح";
+          }
+        }
+
+        toast.success(successMessage);
         navigate("/login");
       }
     }
@@ -70,12 +80,10 @@ const Register = () => {
     return isValid;
   };
 
-  // Modified submit handler to include validation
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
-
     if (validateForm()) {
-      handleSubmit(e); // Proceed with the form submission if valid
+      handleSubmit(e);
     }
   };
 
@@ -95,15 +103,23 @@ const Register = () => {
                   الاسم
                 </label>
                 <input
+                  id="name"
                   type="text"
                   name="name"
-                  className={`form-control ${styles.input}`}
+                  autoComplete="name"
+                  className={`form-control ${styles.input} ${
+                    formErrors.name ? "is-invalid" : ""
+                  }`}
                   placeholder="الاسم..."
                   value={formData.name}
                   onChange={handleChange}
+                  aria-invalid={!!formErrors.name}
+                  aria-describedby={formErrors.name ? "name-error" : undefined}
                 />
                 {formErrors.name && (
-                  <p className="text-danger">{formErrors.name}</p>
+                  <p id="name-error" className="text-danger mt-1" role="alert">
+                    {formErrors.name}
+                  </p>
                 )}
               </div>
 
@@ -113,15 +129,25 @@ const Register = () => {
                   البريد الإلكتروني
                 </label>
                 <input
+                  id="email"
                   type="email"
                   name="email"
-                  className={`form-control ${styles.input}`}
+                  autoComplete="email"
+                  className={`form-control ${styles.input} ${
+                    formErrors.email ? "is-invalid" : ""
+                  }`}
                   placeholder="البريد الإلكتروني..."
                   value={formData.email}
                   onChange={handleChange}
+                  aria-invalid={!!formErrors.email}
+                  aria-describedby={
+                    formErrors.email ? "email-error" : undefined
+                  }
                 />
                 {formErrors.email && (
-                  <p className="text-danger">{formErrors.email}</p>
+                  <p id="email-error" className="text-danger mt-1" role="alert">
+                    {formErrors.email}
+                  </p>
                 )}
               </div>
 
@@ -131,15 +157,29 @@ const Register = () => {
                   كلمة السر
                 </label>
                 <input
+                  id="password"
                   type="password"
                   name="password"
-                  className={`form-control ${styles.input}`}
+                  autoComplete="new-password"
+                  className={`form-control ${styles.input} ${
+                    formErrors.password ? "is-invalid" : ""
+                  }`}
                   placeholder="كلمة السر..."
                   value={formData.password}
                   onChange={handleChange}
+                  aria-invalid={!!formErrors.password}
+                  aria-describedby={
+                    formErrors.password ? "password-error" : undefined
+                  }
                 />
                 {formErrors.password && (
-                  <p className="text-danger">{formErrors.password}</p>
+                  <p
+                    id="password-error"
+                    className="text-danger mt-1"
+                    role="alert"
+                  >
+                    {formErrors.password}
+                  </p>
                 )}
               </div>
 
@@ -149,20 +189,41 @@ const Register = () => {
                   تأكيد كلمة السر
                 </label>
                 <input
+                  id="confirmPassword"
                   type="password"
                   name="confirmPassword"
-                  className={`form-control ${styles.input}`}
+                  autoComplete="new-password"
+                  className={`form-control ${styles.input} ${
+                    formErrors.confirmPassword ? "is-invalid" : ""
+                  }`}
                   placeholder="تأكيد كلمة السر..."
                   value={formData.confirmPassword}
                   onChange={handleChange}
+                  aria-invalid={!!formErrors.confirmPassword}
+                  aria-describedby={
+                    formErrors.confirmPassword ? "confirm-error" : undefined
+                  }
                 />
                 {formErrors.confirmPassword && (
-                  <p className="text-danger">{formErrors.confirmPassword}</p>
+                  <p
+                    id="confirm-error"
+                    className="text-danger mt-1"
+                    role="alert"
+                  >
+                    {formErrors.confirmPassword}
+                  </p>
                 )}
               </div>
 
-              {/* Submit Button */}
-              {error && <p className="text-danger">{error}</p>}
+              {/* General API Error */}
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {typeof error === "string"
+                    ? error
+                    : "حدث خطأ أثناء إنشاء الحساب"}
+                </div>
+              )}
+
               <button
                 type="submit"
                 className={`btn ${styles.submitButton}`}
@@ -171,7 +232,6 @@ const Register = () => {
                 {loading ? "جاري التحميل..." : "إنشاء حساب"}
               </button>
 
-              {/* Login Link */}
               <p className={styles.loginLink}>
                 لديك حساب بالفعل؟ <NavLink to="/login">تسجيل الدخول</NavLink>
               </p>

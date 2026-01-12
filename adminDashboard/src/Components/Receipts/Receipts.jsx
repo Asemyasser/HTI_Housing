@@ -1,97 +1,110 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./Receipts.module.css";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import axios from "axios";
+import { useReceipts } from "../../hooks/useReceipts";
 
 function Receipts() {
-  const { filteredData, setFilteredData, setData } = useOutletContext();
+  const [filteredData, setFilteredData, setData] = useOutletContext();
   const navigate = useNavigate();
 
-  const [loadingButton, setLoadingButton] = useState(null);
-  const [loading, setLoading] = useState(true); // State to handle loading
-  const [error, setError] = useState(null); // State to handle errors
+  // Use custom hook
+  const { loading, error } = useReceipts(setFilteredData, setData);
 
   const handleReceiptClick = (id) => {
-    navigate(`/receipts/${id}`); // Navigate to the ReceiptDetails page
+    navigate(`/receipts/${id}`);
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    const fetchReceipts = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/payment/PendingPayment`,
-          {
-            headers: {
-              token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzY2YjZjZGQzMTYxYzc1YWYwYWQ4M2IiLCJlbWFpbCI6InlvdXNmdGFtZXIxMUBnbWFpbC5jb20iLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTczNDc4NDg0Mn0.KLo76IBdty3i_P96l1hLMNGwa2S-2DOLYSw-RU9u-aQ`,
-            },
-          }
-        ); // Fetch data from the API
-
-        setFilteredData(response.data.data);
-        setData(response.data.data);
-        console.log(response.data.data);
-      } catch (err) {
-        setError(err.response?.data?.message || err.message);
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReceipts();
-  }, []);
 
   if (loading)
     return (
-      <p className="d-flex justify-content-center align-items-center">
-        ...جاري تحميل البيانات
-      </p>
+      <div className="container">
+        <div className="table-responsive">
+          <table
+            className={`table ${styles.parent} table-borderless text-center`}
+          >
+            <tbody>
+              <tr>
+                <td colSpan="5" className="text-center py-5">
+                  ...جاري تحميل البيانات
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
+
   if (error)
     return (
-      <p className="d-flex justify-content-center align-items-center">
-        Error: {error}
-      </p>
+      <div className="container">
+        <div className="table-responsive">
+          <table
+            className={`table ${styles.parent} table-borderless text-center`}
+          >
+            <tbody>
+              <tr>
+                <td colSpan="5" className="text-danger text-center py-5">
+                  Error: {error}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
 
   return (
     <div className="container">
       <div className="table-responsive">
         <table
-          className={`table  ${styles.parent} table-borderless text-center`}
+          className={`table ${styles.parent} table-borderless text-center`}
         >
           <thead className="thead-dark">
             <tr>
-              <th className="h4">إجراءات</th>
-              <th className="h4">الإيميل الجامعي</th>
-              <th className="h4">الاسم</th>
-              <th className="h4">ID</th>
-              <th className="h4">القسم</th>
+              <th scope="col" className="h4">
+                إجراءات
+              </th>
+              <th scope="col" className="h4">
+                الإيميل الجامعي
+              </th>
+              <th scope="col" className="h4">
+                الاسم
+              </th>
+              <th scope="col" className="h4">
+                ID
+              </th>
+              <th scope="col" className="h4">
+                القسم
+              </th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((row) => (
-              <tr key={row._id}>
-                <td>
-                  <button
-                    className={`btn mx-1 rounded-pill px-4 ${styles.receiptBtn}`}
-                    onClick={() => handleReceiptClick(row._id)}
-                  >
-                    عرض الإيصال
-                  </button>
-                  {loadingButton && (
-                    <div className={styles.loadingOverlay}>
-                      <div className={`${styles.loader}`}></div>
-                    </div>
-                  )}
+            {filteredData && filteredData.length > 0 ? (
+              filteredData.map((row) => (
+                <tr key={row._id}>
+                  <td>
+                    <button
+                      className={`btn mx-1 rounded-pill px-4 ${styles.receiptBtn}`}
+                      onClick={() => handleReceiptClick(row._id)}
+                      aria-label={`عرض إيصال الطالب ${
+                        row.booking?.student?.name || "غير معروف"
+                      }`}
+                    >
+                      عرض الإيصال
+                    </button>
+                  </td>
+                  <td>{row.booking?.student?.email || "N/A"}</td>
+                  <td>{row.booking?.student?.name || "N/A"}</td>
+                  <td>{row.booking?.student?.ID || "N/A"}</td>
+                  <td>{row.booking?.student?.department || "N/A"}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center py-4">
+                  لا يوجد إيصالات حالياً
                 </td>
-                <td>{row.booking.student.email}</td>
-                <td>{row.booking.student.name}</td>
-                <td>{row.booking.student.ID}</td>
-                <td>{row.booking.student.department}</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

@@ -19,10 +19,6 @@
   z-index: 1040;
   padding: 23px 20px;
   transition: width 0.3s ease;
-  -webkit-transition: width 0.3s ease;
-  -moz-transition: width 0.3s ease;
-  -ms-transition: width 0.3s ease;
-  -o-transition: width 0.3s ease;
   color: #003668;
   box-shadow: 0px 4px 4px -2px #00000040;
 }
@@ -37,62 +33,62 @@
   }
 }
 
+/* =========================================
+   NOTIFICATIONS CONTAINER
+   ========================================= */
 .notifications {
-  min-width: 350px;
-  max-width: 450px;
+  /* Dimensions */
+  min-width: 300px;
+  width: 320px;
+  max-width: 90vw;
+  /* Responsive width */
+
+  height: auto;
+  max-height: 400px;
+
   position: absolute;
-  left: 16px;
-  top: 110%;
-  padding: 16px 20px;
+  left: 0;
+  right: auto;
+  /* Align to the left (icon side) */
+  top: 130%;
+
+  padding: 10px;
   background-color: #fff;
-  height: 500px;
-  box-shadow: 0px 4px 4px -2px #00000040;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
   z-index: 1040;
-  border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  -ms-border-radius: 20px;
-  -o-border-radius: 20px;
+  border-radius: 15px;
+
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  transition: opacity 0.3s ease-in-out;
-  -webkit-transition: opacity 0.3s ease-in-out;
-  -moz-transition: opacity 0.3s ease-in-out;
-  -ms-transition: opacity 0.3s ease-in-out;
-  -o-transition: opacity 0.3s ease-in-out;
-  overflow-x: auto;
+  gap: 8px;
+
   overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .noNotifications {
-  position: absolute;
-  min-width: 350px;
-  max-width: 450px;
+  min-width: 300px;
+  width: 320px;
+  max-width: 90vw;
+  height: auto;
+  min-height: 200px;
 
-  left: 16px;
-  top: 110%;
-  padding: 16px 20px;
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 130%;
+
+  padding: 16px;
   background-color: #fff;
-  height: 500px;
-  box-shadow: 0px 4px 4px -2px #00000040;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
   z-index: 1040;
-  border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  -ms-border-radius: 20px;
-  -o-border-radius: 20px;
+  border-radius: 15px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: opacity 0.3s ease-in-out;
-  -webkit-transition: opacity 0.3s ease-in-out;
-  -moz-transition: opacity 0.3s ease-in-out;
-  -ms-transition: opacity 0.3s ease-in-out;
-  -o-transition: opacity 0.3s ease-in-out;
 }
 
 .noNotifications img {
@@ -104,94 +100,142 @@
   color: #585858;
 }
 
+/* =========================================
+   NOTIFICATION ITEM
+   ========================================= */
 .notifications .notificationItem {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  /* Removed display flex here because the inner content handles layout */
   padding: 10px;
   border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
   transition: background-color 0.3s;
-  -webkit-transition: background-color 0.3s;
-  -moz-transition: background-color 0.3s;
-  -ms-transition: background-color 0.3s;
-  -o-transition: background-color 0.3s;
   cursor: pointer;
+  box-sizing: border-box;
+  /* Ensures padding doesn't increase width */
 }
 
 .notifications .notificationItem:hover {
   background-color: #f5f5f5;
 }
 
+/* The wrapper inside the item */
+.notificationContent {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  /* Reduced gap to save space */
+}
+
+/* -- Icons -- */
 .notifications .notificationItem .iconRequest,
 .notifications .notificationItem .iconReceipt {
-  width: 25px;
-  height: 25px;
-  padding: 12px;
+  width: 35px;
+  /* Fixed square size */
+  height: 35px;
+  padding: 8px;
+  /* Adjusted padding */
   border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
   background-color: #58A0FE;
   color: #fff;
+  flex-shrink: 0;
+  /* Prevent icon from squishing */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .notifications .notificationItem .iconReceipt {
   background-color: #BCA6FF;
 }
 
+/* -- Text (Title) -- */
 .notifications .notificationItem p {
   color: #003668;
-  padding: 0 4px;
-  width: 160px;
+  margin: 0;
+  padding: 0 5px;
+
+  /* ✅ FIX: Remove fixed width (160px) and use flex */
+  width: auto;
+  flex-grow: 1;
+  font-size: 0.95rem;
+  /* Slightly smaller font */
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* -- Right Side (Timestamp + Delete) -- */
+.notificationContent .rightSide {
+  /* Create a class in JSX or target via structure if needed, 
+       but relying on flex behavior below */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  /* Don't let time/delete shrink too much */
+}
+
+.timestamp {
+  /* ✅ FIX: Remove fixed width (100px) */
+  width: auto;
+  font-size: 0.75rem;
+  /* Smaller font for time */
+  white-space: nowrap;
+  /* Keep on one line */
+  color: #888;
 }
 
 .deleteIcon {
-  width: 20px;
-  height: 20px;
-  padding: 10px;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
   cursor: pointer;
   border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
   background-color: #EDC7C7;
   transition: all 0.3s ease;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .deleteIcon:hover {
   transform: scale(1.1);
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  -o-transform: scale(1.1);
 }
 
+/* =========================================
+   MOBILE ADJUSTMENTS (Max 768px)
+   ========================================= */
 @media (max-width: 768px) {
-  .notifications {
-    width: 80%;
+
+  .notifications,
+  .noNotifications {
+    width: 280px;
+    /* Slightly narrower on mobile */
+    min-width: auto;
+    left: 0;
+    right: auto;
+  }
+
+  .notifications .notificationItem {
+    padding: 8px;
+  }
+
+  /* Make text smaller to fit */
+  .notifications .notificationItem p {
+    font-size: 0.85rem;
+  }
+
+  .timestamp {
+    font-size: 0.65rem;
   }
 
   .notifications img {
     width: 30%;
   }
-
-  .notifications p {
-    font-size: 20px;
-  }
 }
 
+/* =========================================
+   OTHER NAV STYLES (Title, Toggle, Search)
+   ========================================= */
 .title {
   font-size: 30px;
   font-weight: 700;
@@ -217,45 +261,30 @@
   cursor: pointer;
   padding: 0;
   transition: transform 0.3s;
-  -webkit-transition: transform 0.3s;
-  -moz-transition: transform 0.3s;
-  -ms-transition: transform 0.3s;
-  -o-transition: transform 0.3s;
 }
 
 .toggleButton:hover {
   transform: scale(1.2);
-  -webkit-transform: scale(1.2);
-  -moz-transform: scale(1.2);
-  -ms-transform: scale(1.2);
-  -o-transform: scale(1.2);
+}
 
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .icons svg {
   transition: 0.3s;
-  -webkit-transition: 0.3s;
-  -moz-transition: 0.3s;
-  -ms-transition: 0.3s;
-  -o-transition: 0.3s;
   cursor: pointer;
 }
 
 .icons svg:hover {
   transform: scale(1.2);
-  -webkit-transform: scale(1.2);
-  -moz-transform: scale(1.2);
-  -ms-transform: scale(1.2);
-  -o-transform: scale(1.2);
 }
 
 .bellIcon {
   padding: 15px;
   border-radius: 50px;
-  -webkit-border-radius: 50px;
-  -moz-border-radius: 50px;
-  -ms-border-radius: 50px;
-  -o-border-radius: 50px;
 }
 
 .bellIcon.active {
@@ -263,6 +292,21 @@
   color: #fff;
 }
 
+.notificationWrapper {
+  position: relative;
+}
+
+.notificationDot {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+/* Search Bar */
 .searchWrapper {
   position: relative;
 }
@@ -279,28 +323,19 @@
   outline: none;
   margin-left: 16px;
   border-radius: 50px;
-  -webkit-border-radius: 50px;
-  -moz-border-radius: 50px;
-  -ms-border-radius: 50px;
-  -o-border-radius: 50px;
+  background-color: #fff;
+  z-index: 1050;
   transition: all 0.3s ease;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
 }
 
 .searchInput:focus {
   width: 400px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 1024px) {
   .searchInput {
-    width: 100px;
+    width: 150px;
   }
 
   .searchInput:focus {
@@ -310,63 +345,27 @@
 
 @media (max-width: 768px) {
   .searchInput {
-    top: 220%;
-    left: 0;
+    top: 150%;
+    left: -10px;
+    right: auto;
     margin-left: 0;
+    width: 260px;
+    max-width: 80vw;
+    transform: none;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .searchInput:focus {
+    width: 280px;
+    max-width: 90vw;
   }
 }
 
 .searchIcon {
   cursor: pointer;
   transition: transform 0.3s;
-  -webkit-transition: transform 0.3s;
-  -moz-transition: transform 0.3s;
-  -ms-transition: transform 0.3s;
-  -o-transition: transform 0.3s;
 }
 
 .searchIcon:hover {
   transform: scale(1.2);
-  -webkit-transform: scale(1.2);
-  -moz-transform: scale(1.2);
-  -ms-transform: scale(1.2);
-  -o-transform: scale(1.2);
-}
-
-.searchWrapper .searchInput.show {
-  transition: all 0.3s ease;
-}
-
-.icons {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.notificationWrapper {
-  position: relative;
-}
-
-.notificationDot {
-  position: absolute;
-  top: 13px;
-  /*Adjustpositionasneeded*/
-  right: 13px;
-  /*Adjustpositionasneeded*/
-  width: 8px;
-  /*Sizeofthereddot*/
-  height: 8px;
-  /*Sizeofthereddot*/
-  background-color: red;
-  border-radius: 50%;
-  transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-}
-
-
-.timestamp {
-  width: 100px;
 }
